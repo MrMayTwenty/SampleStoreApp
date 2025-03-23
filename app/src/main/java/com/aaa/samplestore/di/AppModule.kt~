@@ -37,7 +37,7 @@ object AppModule {
             .build()
             .create(FakeStoreApi::class.java)
     }
-
+    
     @Provides
     @Singleton
     fun provideProductRepository(api: FakeStoreApi): IProductRepository = ProductRepository(api)

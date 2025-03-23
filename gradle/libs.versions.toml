@@ -25,6 +25,8 @@ ktxserialization = "1.6.3"
 hilt-navigation-compose = "1.2.0"
 androidx-security-crypto = "1.1.0-alpha06"
 okhttp3-logging-interceptor = "4.9.3"
+storage = "1.5.0"
+coil = "3.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -56,6 +58,9 @@ kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-navigation-compose"}
 androidx-security-crypto = { group = "androidx.security", name = "security-crypto", version.ref ="androidx-security-crypto"}
 okhttp3-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref ="okhttp3-logging-interceptor"}
+androidx-storage = { group = "androidx.test.services", name = "storage", version.ref = "storage" }
+coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
+coil-network-okhttp = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

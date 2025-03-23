@@ -1,16 +1,16 @@
-package com.aaa.samplestore.data.remote.dto
+package com.aaa.samplestore.domain.model
 
-data class ProductDTO(
+data class Product(
     val brand: String,
     val category: String,
-    val color: String,
+    val color: String?,
     val description: String,
-    val discount: Int,
+    val discount: Int?,
     val id: Int,
     val image: String,
     val model: String,
-    val onSale: Boolean,
-    val popular: Boolean,
+    val onSale: Boolean?,
+    val popular: Boolean?,
     val price: Int,
     val title: String
 )

@@ -25,7 +25,9 @@ import com.aaa.samplestore.presentation.productdetail.ProductDetailViewModel
 import com.aaa.samplestore.presentation.productlist.ProductListScreen
 import com.aaa.samplestore.presentation.productlist.ProductListViewModel
 import com.aaa.samplestore.presentation.ui.theme.SampleStoreAppTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +46,6 @@ class MainActivity : ComponentActivity() {
                            ProductListScreen(viewModel,
                                onProductClick = { navController.navigate(Screen.ProductDetailScreen(it)) },
                                onCartClick = { navController.navigate(Screen.CartScreen) },
-                               onCheckoutClick = { navController.navigate(Screen.CheckoutScreen) },
                            )
                        }
 

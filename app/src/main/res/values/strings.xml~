@@ -5,10 +5,10 @@
     <string name="all">All</string>
     <string name="popular">Popular</string>
     <string name="sale">Sale</string>
-    <string name="tv">TV</string>
-    <string name="audio">Audio</string>
-    <string name="laptop">Laptop</string>
-    <string name="mobile">Mobile</string>
-    <string name="gaming">Gaming</string>
-    <string name="appliances">Appliances</string>
+    <string name="tv">tv</string>
+    <string name="audio">audio</string>
+    <string name="laptop">laptop</string>
+    <string name="mobile">mobile</string>
+    <string name="gaming">gaming</string>
+    <string name="appliances">appliances</string>
 </resources>

@@ -1,0 +1,4 @@
+package com.aaa.samplestore.common
+
+class Resource {
+}
