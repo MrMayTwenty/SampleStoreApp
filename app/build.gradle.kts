@@ -2,20 +2,26 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.hilt.android)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
     namespace = "com.aaa.samplestore"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.aaa.samplestore"
         minSdk = 31
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+
+        buildConfigField("String","BASE_URL", "\"https://fakestoreapi.in/api/\"")
     }
 
     buildTypes {
@@ -36,11 +42,14 @@ android {
     }
     buildFeatures {
         compose = true
+        viewBinding = true
+        buildConfig = true
     }
 }
 
 dependencies {
 
+    //Default Libraries
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -56,4 +65,34 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    implementation(libs.material)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.androidx.navigation.compose)
+
+    //Android Extras
+    implementation(libs.androidx.security.crypto)
+
+
+    //RetroFit2
+    implementation(libs.retrofit2)
+    implementation(libs.retrofit2.gson.converter)
+
+    //OkHttp
+    implementation(libs.okhttp3.logging.interceptor)
+
+    //DaggerHilt
+    implementation(libs.dagger.hilt)
+    kapt(libs.dagger.hilt.compiler)
+    androidTestImplementation(libs.hilt.android.testing)
+    kaptAndroidTest(libs.dagger.hilt.compiler)
+    testImplementation(libs.hilt.android.testing)
+    kaptTest(libs.dagger.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
+
+    //Navigation Compose Serialization
+    implementation(libs.kotlinx.serialization.json)
 }
