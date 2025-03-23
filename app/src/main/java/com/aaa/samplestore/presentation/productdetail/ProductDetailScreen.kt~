@@ -208,7 +208,6 @@ fun ProductDetailScreen(
             // Add to Cart Button
             Button(
                 onClick = {
-                    numberOfOrders = 0
                     viewModel.addToCart(product, numberOfOrders)
                 },
                 modifier = Modifier.fillMaxWidth(),
