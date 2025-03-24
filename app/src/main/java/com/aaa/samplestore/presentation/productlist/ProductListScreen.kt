@@ -14,9 +14,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -26,6 +29,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -50,6 +54,8 @@ import coil3.compose.AsyncImage
 import com.aaa.samplestore.R
 import com.aaa.samplestore.common.Constants
 import com.aaa.samplestore.domain.model.Product
+import com.aaa.samplestore.presentation.components.ErrorView
+import com.aaa.samplestore.presentation.components.LoadingView
 
 @Composable
 fun ProductListScreen(
@@ -63,7 +69,9 @@ fun ProductListScreen(
 
 
     LaunchedEffect(Unit) {
-        viewModel.getAllProducts(1)
+        if(productsState.data.isNullOrEmpty()){
+            viewModel.getAllProducts(1)
+        }
     }
 
     Scaffold(
@@ -109,14 +117,27 @@ fun ProductListScreen(
                         selected = selectedFilter.value == filter.value,
                         onClick = { viewModel.showProductsByCategory(filter)},
                     )
+                    Spacer(modifier = Modifier.width(8.dp))
                 }
+
             }
 
 
-            ProductGrid(
-                products = productsState.data ?: emptyList(),
-                onProductClick = onProductClick
-            )
+            if(productsState.isLoading) {
+                LoadingView()
+            }
+
+            if(productsState.error != null) {
+                ErrorView(productsState.error)
+            }
+
+            if(!productsState.data.isNullOrEmpty()) {
+                ProductGrid(
+                    products = productsState.data,
+                    onProductClick = onProductClick
+                )
+            }
+
 
 //            BottomNavBar(
 //                selectedCategory = selectedCategory,
@@ -192,10 +213,14 @@ fun ProductGrid(
     products: List<Product>,
     onProductClick: (Int) -> Unit
 ) {
+
+    val listState = rememberLazyGridState()
+
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(8.dp)
+        contentPadding = PaddingValues(8.dp),
+        state = listState
     ) {
         items(products) { product ->
             ProductItem(product = product, onClick = { onProductClick(product.id) })

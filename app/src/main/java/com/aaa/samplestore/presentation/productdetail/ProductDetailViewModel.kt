@@ -5,7 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aaa.samplestore.common.Resource
+import com.aaa.samplestore.domain.model.CartItem
 import com.aaa.samplestore.domain.model.Product
+import com.aaa.samplestore.domain.usecase.AddToCartUseCase
 import com.aaa.samplestore.domain.usecase.GetProductByIdUseCase
 import com.aaa.samplestore.presentation.ViewModelState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,11 +16,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProductDetailViewModel @Inject constructor(
-    private val getProductByIdUseCase: GetProductByIdUseCase
+    private val getProductByIdUseCase: GetProductByIdUseCase,
+    private val addToCartUseCase: AddToCartUseCase
 ) : ViewModel() {
 
     private val _productState = mutableStateOf(ViewModelState<Product>())
     val productState: State<ViewModelState<Product>> = _productState
+
+    private val _addToCartState = mutableStateOf(ViewModelState<Unit>())
+    val addToCartState: State<ViewModelState<Unit>> = _addToCartState
 
     fun getProductById(id: Int){
         viewModelScope.launch {
@@ -33,6 +39,22 @@ class ProductDetailViewModel @Inject constructor(
     }
 
     fun addToCart(product: Product, numberOfOrders: Int) {
-
+        viewModelScope.launch {
+            addToCartUseCase(CartItem(
+                cartId = null,
+                productId = product.id,
+                quantity = numberOfOrders,
+                title = product.title,
+                brand = product.brand,
+                image = product.image,
+                price = product.price
+            )).collect { result ->
+                when(result) {
+                    is Resource.Error -> _addToCartState.value = ViewModelState(error = result.message)
+                    is Resource.Loading -> _addToCartState.value = ViewModelState(isLoading = true)
+                    is Resource.Success -> _addToCartState.value = ViewModelState(data = result.data)
+                }
+            }
+        }
     }
 }

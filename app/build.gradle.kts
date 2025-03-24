@@ -2,10 +2,11 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.kotlin.kapt)
+//    alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.android.room)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -92,11 +93,11 @@ dependencies {
 
     //DaggerHilt
     implementation(libs.dagger.hilt)
-    kapt(libs.dagger.hilt.compiler)
+    ksp(libs.dagger.hilt.compiler)
     androidTestImplementation(libs.hilt.android.testing)
-    kaptAndroidTest(libs.dagger.hilt.compiler)
+    kspAndroidTest(libs.dagger.hilt.compiler)
     testImplementation(libs.hilt.android.testing)
-    kaptTest(libs.dagger.hilt.compiler)
+    kspTest(libs.dagger.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
 
     //Navigation Compose Serialization
@@ -108,6 +109,6 @@ dependencies {
 
     //Room
     implementation(libs.room.runtime)
-    kapt(libs.room.compiler)
+    ksp(libs.room.compiler)
     implementation(libs.room.ktx)
 }

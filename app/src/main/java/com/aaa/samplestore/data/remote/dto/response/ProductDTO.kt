@@ -13,7 +13,7 @@ data class ProductDTO(
     val model: String,
     val onSale: Boolean?,
     val popular: Boolean?,
-    val price: Int,
+    val price: Double,
     val title: String
 )
 

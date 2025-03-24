@@ -1,24 +1,24 @@
 [versions]
-agp = "8.7.3"
-kotlin = "2.0.0"
+agp = "8.9.0"
+kotlin = "2.1.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.10.1"
-composeBom = "2024.04.01"
+composeBom = "2025.03.00"
 retrofit2 = "2.11.0"
 dagger-hilt = "2.55"
 dagger-hilt-compiler = "2.55"
 hilt-android-testing = "2.55"
 hilt-compiler = "2.55"
 kapt = "2.1.10"
-material = "1.10.0"
-appcompat = "1.6.1"
-constraintlayout = "2.1.4"
-navigationFragmentKtx = "2.6.0"
-navigationUiKtx = "2.6.0"
+material = "1.12.0"
+appcompat = "1.7.0"
+constraintlayout = "2.2.1"
+navigationFragmentKtx = "2.8.9"
+navigationUiKtx = "2.8.9"
 retrofit2-gson-converter = "2.11.0"
 navigationCompose = "2.8.9"
 ktxserialization = "1.6.3"
@@ -28,6 +28,7 @@ okhttp3-logging-interceptor = "4.9.3"
 storage = "1.5.0"
 coil = "3.1.0"
 room = "2.6.1"
+ksp = "2.0.21-1.0.27"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -74,5 +75,6 @@ kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kapt" }
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "dagger-hilt"}
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 android-room = { id = "androidx.room", version.ref = "room" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 

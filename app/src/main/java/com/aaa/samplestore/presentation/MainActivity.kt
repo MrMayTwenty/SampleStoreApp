@@ -71,8 +71,7 @@ class MainActivity : ComponentActivity() {
                        composable<Screen.CheckoutScreen> {
                            val viewModel = hiltViewModel<CheckoutViewModel>()
                            CheckoutScreen(viewModel,
-                               onBackClick = { },
-                               onCompletePurchaseClick = { }
+                               onPaymentSuccess = { navController.navigate(Screen.ProductListScreen) }
                            )
                        }
 

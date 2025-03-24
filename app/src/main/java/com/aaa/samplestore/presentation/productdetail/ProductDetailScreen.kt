@@ -1,6 +1,7 @@
 package com.aaa.samplestore.presentation.productdetail
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -35,6 +37,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.aaa.samplestore.presentation.components.ErrorView
+import com.aaa.samplestore.presentation.components.LoadingView
 
 @Composable
 fun ProductDetailScreen(
@@ -57,11 +61,11 @@ fun ProductDetailScreen(
     }
 
     if(productState.isLoading) {
-
+        LoadingView()
     }
 
     if(productState.error != null) {
-
+        ErrorView(productState.error)
     }
 
     if(productState.data != null) {
@@ -72,11 +76,6 @@ fun ProductDetailScreen(
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            // Back Button
-            IconButton(onClick = onBackClick) {
-                Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-            }
-
             // Product Image
             AsyncImage(
                 model = product.image,
@@ -208,7 +207,6 @@ fun ProductDetailScreen(
             // Add to Cart Button
             Button(
                 onClick = {
-                    numberOfOrders = 0
                     viewModel.addToCart(product, numberOfOrders)
                 },
                 modifier = Modifier.fillMaxWidth(),
