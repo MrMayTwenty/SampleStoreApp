@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
                                productDetail.productId,
                                onBackClick = { },
                                onAddToCartClick = { },
-                               onBuyNowClick = { }
+                               onBuyNowClick = { navController.navigate(Screen.CartScreen) }
                            )
                        }
 
