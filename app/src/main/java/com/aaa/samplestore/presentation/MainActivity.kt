@@ -130,13 +130,14 @@ class MainActivity : ComponentActivity() {
                                 viewModel,
                                 onLoginClick = {},
                                 onRegisterClick = {},
-                                onWishListClick = {},
+                                onWishListClick = { navController.navigate(Screen.WishlistScreen)},
                                 onLogoutSuccess = {})
                         }
 
                         composable<Screen.WishlistScreen> {
                             val viewModel = hiltViewModel<WishlistViewModel>()
-                            WishlistScreen(viewModel)
+                            WishlistScreen(viewModel,
+                                onProductClick = { productId -> navController.navigate(Screen.ProductDetailScreen(productId))})
                         }
                     }
                 }
