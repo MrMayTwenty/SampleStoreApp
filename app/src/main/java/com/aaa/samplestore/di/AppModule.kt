@@ -3,14 +3,18 @@ package com.aaa.samplestore.di
 import android.content.Context
 import com.aaa.samplestore.common.Constants
 import com.aaa.samplestore.data.local.dao.CartDao
+import com.aaa.samplestore.data.local.dao.UserDao
+import com.aaa.samplestore.data.local.dao.WishlistDao
 import com.aaa.samplestore.data.local.database.AppDatabase
 import com.aaa.samplestore.data.local.sharedpreference.SessionManager
 import com.aaa.samplestore.data.remote.FakeStoreApi
 import com.aaa.samplestore.data.remote.interceptors.CurlLogInterceptor
 import com.aaa.samplestore.data.repository.CartRepository
 import com.aaa.samplestore.data.repository.ProductRepository
+import com.aaa.samplestore.data.repository.UserRepository
 import com.aaa.samplestore.domain.repository.ICartRepository
 import com.aaa.samplestore.domain.repository.IProductRepository
+import com.aaa.samplestore.domain.repository.IUserRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -55,7 +59,19 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideUserDao(appDatabase: AppDatabase): UserDao = appDatabase.userDao()
+
+    @Provides
+    @Singleton
+    fun provideWishlistDao(appDatabase: AppDatabase): WishlistDao = appDatabase.wishlistDao()
+
+    @Provides
+    @Singleton
     fun provideProductRepository(api: FakeStoreApi): IProductRepository = ProductRepository(api)
+
+    @Provides
+    @Singleton
+    fun provideUserRepository(api: FakeStoreApi): IUserRepository = UserRepository(api)
 
     @Provides
     @Singleton

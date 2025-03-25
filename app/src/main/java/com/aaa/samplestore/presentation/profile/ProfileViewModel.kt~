@@ -24,7 +24,7 @@ class ProfileViewModel @Inject constructor(
 
     }
 
-    fun getCurrentUserId(): Long?{
+    fun getCurrentUserId(): Int?{
         return sessionManager.getUserId()
     }
 

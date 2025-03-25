@@ -9,7 +9,7 @@ import com.aaa.samplestore.data.local.entity.UserEntity
 @Dao
 interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertUser(user: UserEntity)
+    suspend fun insertUser(user: UserEntity): Long
 
     @Query("SELECT * FROM users WHERE email = :email AND password_hashed = :passwordHashed")
     suspend fun getUser(email: String, passwordHashed: String): UserEntity?

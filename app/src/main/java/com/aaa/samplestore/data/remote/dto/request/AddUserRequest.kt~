@@ -1,4 +1,0 @@
-package com.aaa.samplestore.data.remote.dto.request
-
-class AddUserRequest {
-}

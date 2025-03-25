@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.aaa.samplestore.common.RoomConstants
+import com.aaa.samplestore.domain.model.WishlistItem
 
 @Entity(tableName = RoomConstants.Wishlist.TABLE_NAME,
     foreignKeys = [
@@ -22,3 +23,16 @@ data class WishListItemEntity(
     @ColumnInfo(name = RoomConstants.Wishlist.Columns.IMAGE) val image: String,
     @ColumnInfo(name = RoomConstants.Wishlist.Columns.PRICE) val price: Double,
 )
+
+
+fun WishListItemEntity.toWishlistItem(): WishlistItem {
+    return WishlistItem(
+        wishlistItemId = id,
+        userId = userId,
+        productId = productId,
+        title = title,
+        brand = brand,
+        image = image,
+        price = price,
+    )
+}

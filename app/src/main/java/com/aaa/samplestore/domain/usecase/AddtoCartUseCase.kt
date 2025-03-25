@@ -10,11 +10,11 @@ import javax.inject.Inject
 class AddToCartUseCase @Inject constructor(
     private val cartRepository: ICartRepository
 ) {
-    operator fun invoke(item: CartItem, userId: Int?): Flow<Resource<Unit>> = flow {
+    operator fun invoke(item: CartItem, userId: Long?): Flow<Resource<Unit>> = flow {
         try {
             emit(Resource.Loading())
             val existingItem = if(userId != null) {
-                cartRepository.getCartItems(userId).firstOrNull { it.cartId != null && it.productId == item.productId }
+                cartRepository.getCartItems(userId.toInt()).firstOrNull { it.cartId != null && it.productId == item.productId }
             } else {
                 cartRepository.getCartItems().firstOrNull { it.cartId != null && it.productId == item.productId }
             }

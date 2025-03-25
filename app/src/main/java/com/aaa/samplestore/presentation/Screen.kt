@@ -17,4 +17,6 @@ sealed class Screen() {
     object RegisterScreen : Screen()
     @Serializable
     object ProfileScreen : Screen()
+    @Serializable
+    object WishlistScreen: Screen()
 }

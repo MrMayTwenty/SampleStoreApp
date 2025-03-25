@@ -9,6 +9,9 @@ import com.aaa.samplestore.data.local.entity.CartItemEntity
 @Dao
 interface CartDao {
 
+    @Query("UPDATE cart SET user_id=:userId WHERE user_id IS NULL")
+    suspend fun assignUserToUnownedCarts(userId: Int)
+
     @Query("SELECT * FROM cart WHERE user_id IS NULL")
     suspend fun getCartItems(): List<CartItemEntity>
 

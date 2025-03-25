@@ -8,13 +8,13 @@ import javax.inject.Inject
 class SessionManager @Inject constructor(
     @ApplicationContext private val context: Context
 ) : BaseSharedPreferences(context.getSharedPreferences(Constants.SharedPref.PREF_NAME, Context.MODE_PRIVATE)) {
-    fun saveUserId(userId: Int) {
-        putInt(Constants.SessionKeys.USER_ID, userId)
+    fun saveUserId(userId: Long) {
+        putLong(Constants.SessionKeys.USER_ID, userId)
     }
 
-    fun getUserId(): Int? {
-        val userId = getInt(Constants.SessionKeys.USER_ID, -1)
-        return if (userId != -1) userId else null
+    fun getUserId(): Long? {
+        val userId = getLong(Constants.SessionKeys.USER_ID, -1L)
+        return if (userId != -1L) userId else null
     }
 
     fun clearSession() {

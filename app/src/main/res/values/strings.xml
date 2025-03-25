@@ -32,4 +32,16 @@
     <string name="increase">Increase</string>
     <string name="add_to_cart">Add to Cart</string>
     <string name="buy_now">Buy Now</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="email">Email</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="street">Street</string>
+    <string name="house_number">House Number</string>
+    <string name="city">City</string>
+    <string name="zipcode">Zipcode</string>
+    <string name="wishlisted">Wishlisted</string>
+    <string name="not_wishlisted">Not wishlisted</string>
 </resources>

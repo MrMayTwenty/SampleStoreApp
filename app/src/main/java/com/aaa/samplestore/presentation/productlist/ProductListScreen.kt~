@@ -272,6 +272,7 @@ fun ProductItem(
                 Icon(
                     painter = painterResource(R.drawable.baseline_add_shopping_cart_24),
                     contentDescription = "Add to cart",
+                    tint = Color.White
                 )
             }
         }

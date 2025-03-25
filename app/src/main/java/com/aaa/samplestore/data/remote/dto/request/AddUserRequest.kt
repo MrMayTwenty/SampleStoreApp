@@ -11,7 +11,7 @@ data class AddUserRequest(
 
 data class Address(
     val city: String,
-    val geolocation: Geolocation,
+    val geolocation: Geolocation? = null,
     val number: String,
     val street: String,
     val zipcode: String

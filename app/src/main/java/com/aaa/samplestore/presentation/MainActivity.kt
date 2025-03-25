@@ -34,6 +34,8 @@ import com.aaa.samplestore.presentation.profile.ProfileViewModel
 import com.aaa.samplestore.presentation.register.RegisterScreen
 import com.aaa.samplestore.presentation.register.RegisterViewModel
 import com.aaa.samplestore.presentation.ui.theme.SampleStoreAppTheme
+import com.aaa.samplestore.presentation.wishlist.WishlistScreen
+import com.aaa.samplestore.presentation.wishlist.WishlistViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
 
@@ -47,81 +49,100 @@ class MainActivity : ComponentActivity() {
                 val loginViewModel = hiltViewModel<LoginViewModel>()
                 val navController = rememberNavController()
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                   NavHost(
-                       navController = navController,
-                       startDestination = Screen.ProductListScreen,
-                       modifier = Modifier.padding(innerPadding)
-                   ) {
-                       composable<Screen.ProductListScreen> {
-                           val viewModel = hiltViewModel<ProductListViewModel>()
-                           ProductListScreen(viewModel,
-                               onProductClick = { navController.navigate(Screen.ProductDetailScreen(it)) },
-                               onCartClick = { navController.navigate(Screen.CartScreen) },
-                               onProfileClick = { navController.navigate(Screen.ProfileScreen) }
-                           )
-                       }
+                    NavHost(
+                        navController = navController,
+                        startDestination = Screen.ProductListScreen,
+                        modifier = Modifier.padding(innerPadding)
+                    ) {
+                        composable<Screen.ProductListScreen> {
+                            val viewModel = hiltViewModel<ProductListViewModel>()
+                            ProductListScreen(
+                                viewModel,
+                                onProductClick = {
+                                    navController.navigate(
+                                        Screen.ProductDetailScreen(
+                                            it
+                                        )
+                                    )
+                                },
+                                onCartClick = { navController.navigate(Screen.CartScreen) },
+                                onProfileClick = { navController.navigate(Screen.ProfileScreen) }
+                            )
+                        }
 
-                       composable<Screen.ProductDetailScreen> { backStackEntry ->
-                           val viewModel = hiltViewModel<ProductDetailViewModel>()
-                           val productDetail: Screen.ProductDetailScreen = backStackEntry.toRoute()
-                           ProductDetailScreen(viewModel,
-                               productDetail.productId,
-                               onBackClick = { },
-                               onAddToCartClick = { },
-                               onBuyNowClick = { navController.navigate(Screen.CartScreen) }
-                           )
-                       }
+                        composable<Screen.ProductDetailScreen> { backStackEntry ->
+                            val viewModel = hiltViewModel<ProductDetailViewModel>()
+                            val productDetail: Screen.ProductDetailScreen = backStackEntry.toRoute()
+                            ProductDetailScreen(
+                                viewModel,
+                                productDetail.productId,
+                                onBackClick = { },
+                                onAddToCartClick = { },
+                                onBuyNowClick = { navController.navigate(Screen.CartScreen) },
+                                onProfileClick = { navController.navigate(Screen.ProfileScreen) },
+                                onCartClick = { navController.navigate(Screen.CartScreen) }
+                            )
+                        }
 
-                       composable<Screen.CartScreen> {
-                           val viewModel = hiltViewModel<CartViewModel>()
-                               CartScreen(viewModel,
-                                   onBackClick = { },
-                                   onProceedToCheckoutClick = {
-                                       if(loginViewModel.isLoggedIn()){
-                                           navController.navigate(Screen.CheckoutScreen)
-                                       }else{
-                                           navController.navigate(Screen.LoginScreen)
-                                       }
-                                   }
-                               )
-                       }
+                        composable<Screen.CartScreen> {
+                            val viewModel = hiltViewModel<CartViewModel>()
+                            CartScreen(
+                                viewModel,
+                                onBackClick = { },
+                                onProceedToCheckoutClick = {
+                                    if (loginViewModel.isLoggedIn()) {
+                                        navController.navigate(Screen.CheckoutScreen)
+                                    } else {
+                                        navController.navigate(Screen.LoginScreen)
+                                    }
+                                }
+                            )
+                        }
 
-                       composable<Screen.CheckoutScreen> {
-                           val viewModel = hiltViewModel<CheckoutViewModel>()
-                           CheckoutScreen(viewModel,
-                               onPaymentSuccess = { navController.navigate(Screen.ProductListScreen) }
-                           )
-                       }
+                        composable<Screen.CheckoutScreen> {
+                            val viewModel = hiltViewModel<CheckoutViewModel>()
+                            CheckoutScreen(
+                                viewModel,
+                                onPaymentSuccess = { navController.navigate(Screen.ProductListScreen) }
+                            )
+                        }
 
-                       composable<Screen.LoginScreen>{
-                           val viewModel = loginViewModel
-                           LoginScreen(viewModel,
-                               onLoginSuccess = { navController.navigate(Screen.ProductListScreen) },
-                               onRegisterClick = { }
-                           )
-                       }
+                        composable<Screen.LoginScreen> {
+                            val viewModel = loginViewModel
+                            LoginScreen(
+                                viewModel,
+                                onLoginSuccess = { navController.navigate(Screen.ProductListScreen) },
+                                onRegisterClick = { navController.navigate(Screen.RegisterScreen) }
+                            )
+                        }
 
-                       composable<Screen.RegisterScreen> {
-                           val viewModel = hiltViewModel<RegisterViewModel>()
-                           RegisterScreen(viewModel,
-                               onRegisterSuccess = { navController.navigate(Screen.LoginScreen) }
-                           )
-                       }
+                        composable<Screen.RegisterScreen> {
+                            val viewModel = hiltViewModel<RegisterViewModel>()
+                            RegisterScreen(
+                                viewModel,
+                                onRegisterSuccess = { navController.navigate(Screen.LoginScreen) }
+                            )
+                        }
 
-                       composable<Screen.ProfileScreen>{
+                        composable<Screen.ProfileScreen> {
                             val viewModel = hiltViewModel<ProfileViewModel>()
-                           ProfileScreen(viewModel,
-                               onLoginClick = {},
-                               onRegisterClick = {},
-                               onWishListClick = {},
-                               onLogoutSuccess = {})
-                               }
+                            ProfileScreen(
+                                viewModel,
+                                onLoginClick = {},
+                                onRegisterClick = {},
+                                onWishListClick = {},
+                                onLogoutSuccess = {})
+                        }
 
-                       }
-                   }
+                        composable<Screen.WishlistScreen> {
+                            val viewModel = hiltViewModel<WishlistViewModel>()
+                            WishlistScreen(viewModel)
+                        }
+                    }
                 }
             }
         }
+    }
 
 }
 

@@ -5,6 +5,7 @@ import com.aaa.samplestore.data.remote.dto.response.ProductDTO
 import com.aaa.samplestore.data.remote.dto.response.ProductListResponseDTO
 import com.aaa.samplestore.data.remote.dto.response.ProductResponseDTO
 import com.aaa.samplestore.data.remote.dto.response.UserDTO
+import com.aaa.samplestore.data.remote.dto.response.UserResponseDTO
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -22,6 +23,6 @@ interface FakeStoreApi {
     suspend fun getProductsByCategory(@Query("type") category: String): ProductListResponseDTO
 
     @POST("users")
-    suspend fun createUser(@Body user: AddUserRequest): UserDTO
+    suspend fun createUser(@Body user: AddUserRequest): UserResponseDTO
 
 }
