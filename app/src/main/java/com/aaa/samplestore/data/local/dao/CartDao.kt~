@@ -10,6 +10,7 @@ import com.aaa.samplestore.data.local.entity.CartItemEntity
 interface CartDao {
 
     @Query("SELECT * FROM cart WHERE user_id IS NULL")
+    @Query("SELECT * FROM cart WHERE ")
     suspend fun getCartItems(): List<CartItemEntity>
 
     @Query("SELECT * FROM cart WHERE user_id = :userId")

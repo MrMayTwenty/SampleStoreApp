@@ -62,6 +62,7 @@ fun ProductListScreen(
     viewModel: ProductListViewModel,
     onProductClick: (productId: Int) -> Unit,
     onCartClick: () -> Unit,
+    onProfileClick: () -> Unit,
 ) {
     val productsState = viewModel.productsState.value
     val selectedFilter = viewModel.selectedFilter.value
@@ -77,7 +78,8 @@ fun ProductListScreen(
     Scaffold(
         topBar = { TopBar(
             onSearch = { query ->  },
-            onCartClick = onCartClick
+            onCartClick = onCartClick,
+            onProfileClick = onProfileClick
         ) },
         bottomBar = { BottomFilter(
             selectedFilter = selectedFilter.value,
@@ -134,7 +136,7 @@ fun ProductListScreen(
             if(!productsState.data.isNullOrEmpty()) {
                 ProductGrid(
                     products = productsState.data,
-                    onProductClick = onProductClick
+                    onProductClick = onProductClick,
                 )
             }
 
@@ -177,7 +179,8 @@ fun PillButton(
 @Composable
 fun TopBar(
     onSearch: (String) -> Unit,
-    onCartClick: () -> Unit
+    onCartClick: () -> Unit,
+    onProfileClick: () -> Unit
 ) {
     var searchQuery by remember { mutableStateOf("") }
 
@@ -202,7 +205,7 @@ fun TopBar(
             Icon(imageVector = Icons.Default.ShoppingCart, contentDescription = "Cart")
         }
 
-        IconButton(onClick = { /* Handle Account Click */ }) {
+        IconButton(onClick = onProfileClick) {
             Icon(imageVector = Icons.Default.Person, contentDescription = "Account")
         }
     }

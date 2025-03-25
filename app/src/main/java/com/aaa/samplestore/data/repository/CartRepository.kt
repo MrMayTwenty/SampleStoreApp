@@ -14,8 +14,16 @@ class CartRepository @Inject constructor(
         return cartDao.getCartItems().map { it.toCartItem() }
     }
 
+    override suspend fun getCartItems(userId: Int): List<CartItem> {
+        return cartDao.getCartItems(userId).map { it.toCartItem() }
+    }
+
     override suspend fun removeFromCart(id: Int?) {
         cartDao.removeFromCart(id)
+    }
+
+    override suspend fun clearUserCart(userId: Int) {
+        cartDao.clearUserCart(userId)
     }
 
     override suspend fun updateQuantity(id: Int?, quantity: Int) {

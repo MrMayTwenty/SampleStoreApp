@@ -30,6 +30,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -54,9 +55,11 @@ fun CartScreen(
 
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
     ) {
-        Text("Shopping Cart", style = MaterialTheme.typography.headlineMedium)
+        Text(stringResource(R.string.shopping_cart), style = MaterialTheme.typography.headlineMedium)
 
         if(cartItems.isLoading) {
             LoadingView()
@@ -95,7 +98,9 @@ fun CartItemRow(item: CartItem, viewModel: CartViewModel) {
         AsyncImage(
             model = item.image,
             contentDescription = item.title,
-            modifier = Modifier.size(80.dp).clip(RoundedCornerShape(8.dp)),
+            modifier = Modifier
+                .size(80.dp)
+                .clip(RoundedCornerShape(8.dp)),
             contentScale = ContentScale.Crop
         )
 
@@ -144,12 +149,14 @@ fun OrderSummary(cartItems: List<CartItem>, onCheckout: () -> Unit) {
             .padding(vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Total: ₱$totalPrice", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+        Text(stringResource(R.string.total_with_currency, totalPrice), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
         Button(
             onClick = onCheckout,
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
         ) {
-            Text("Checkout")
+            Text(stringResource(R.string.checkout))
         }
     }
 }

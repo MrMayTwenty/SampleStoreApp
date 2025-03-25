@@ -1,5 +1,6 @@
 package com.aaa.samplestore.presentation.productdetail
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -33,10 +35,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.aaa.samplestore.R
 import com.aaa.samplestore.presentation.components.ErrorView
 import com.aaa.samplestore.presentation.components.LoadingView
 
@@ -50,6 +54,7 @@ fun ProductDetailScreen(
 ) {
 
     val productState = viewModel.productState.value
+    val currentUserId = viewModel.currentUserId
 
     // Description
     var isDescriptionExpanded by remember { mutableStateOf(false) }
@@ -76,7 +81,6 @@ fun ProductDetailScreen(
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            // Product Image
             AsyncImage(
                 model = product.image,
                 contentDescription = product.title,
@@ -89,7 +93,6 @@ fun ProductDetailScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Product Title
             Text(
                 text = product.title,
                 style = MaterialTheme.typography.headlineSmall,
@@ -98,7 +101,6 @@ fun ProductDetailScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Price & Discount
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = "$${product.price}",
@@ -109,11 +111,16 @@ fun ProductDetailScreen(
                 product.discount?.let {
                     if(it > 0) {
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "-${product.discount}%",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color.Red
-                        )
+                        Box(
+                            modifier = Modifier
+                                .background(Color.Red, shape = RoundedCornerShape(50))
+                        ) {
+                            Text(
+                                text = "-${it}%",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = Color.White
+                            )
+                        }
                     }
                 }
             }
@@ -133,28 +140,25 @@ fun ProductDetailScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Brand
             Text(
-                text = "Brand: ${product.brand}",
+                text = stringResource(R.string.brandWithValue, product.brand),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
             )
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            // Category
             Text(
-                text =  "Category: ${product.category}",
+                text = stringResource(R.string.categoryWithValue, product.category),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
             )
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            // Color
             product.color?.let {
                 Text(
-                    text = "Color: $it",
+                    text = stringResource(R.string.color_with_value, it),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
                 )
@@ -170,7 +174,7 @@ fun ProductDetailScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Quantity",
+                    text = stringResource(R.string.quantity),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onBackground
                 )
@@ -180,7 +184,7 @@ fun ProductDetailScreen(
                 IconButton(onClick = { if (numberOfOrders > 1) numberOfOrders-- }) {
                     Icon(
                         imageVector = Icons.Default.Add,
-                        contentDescription = "Decrease"
+                        contentDescription = stringResource(R.string.decrease)
                     )
                 }
 
@@ -197,36 +201,34 @@ fun ProductDetailScreen(
                 IconButton(onClick = { numberOfOrders++ }) {
                     Icon(
                         imageVector = Icons.Default.Add,
-                        contentDescription = "Increase"
+                        contentDescription = stringResource(R.string.increase)
                     )
                 }
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Add to Cart Button
             Button(
                 onClick = {
-                    viewModel.addToCart(product, numberOfOrders)
+                    viewModel.addToCart(product,currentUserId, numberOfOrders)
                 },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp)
             ) {
-                Text(text = "Add to Cart")
+                Text(text = stringResource(R.string.add_to_cart))
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Buy Now Button
             Button(
                 onClick = {
-                    viewModel.addToCart(product, numberOfOrders)
+                    viewModel.addToCart(product,currentUserId, numberOfOrders)
                     onBuyNowClick()
                 },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp)
             ) {
-                Text(text = "Buy Now")
+                Text(text = stringResource(R.string.buy_now))
             }
         }
     }

@@ -1,0 +1,4 @@
+package com.aaa.samplestore.data.local.sharedpreference
+
+class BaseSharedPreferences {
+}

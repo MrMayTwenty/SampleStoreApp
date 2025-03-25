@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SampleStoreApp</string>
+    <string name="error_general_fallback_text">Ocurrió un error inesperado</string>
+    <string name="error_no_internet">No se pudo conectar a Internet</string>
+    <string name="all">Todo</string>
+    <string name="popular">Popular</string>
+    <string name="sale">Oferta</string>
+    <string name="tv">TV</string>
+    <string name="audio">Audio</string>
+    <string name="laptop">Portátil</string>
+    <string name="mobile">Móvil</string>
+    <string name="gaming">Juegos</string>
+    <string name="appliances">Electrodomésticos</string>
+    <string name="shopping_cart">Carrito de compras</string>
+    <string name="total_with_currency">Total: $%1$s</string>
+    <string name="checkout">Pagar</string>
+    <string name="order_summary">Resumen del pedido</string>
+    <string name="currencyWithPrice">$%1$s</string>
+    <string name="total">Total</string>
+    <string name="full_name">Nombre completo</string>
+    <string name="address">Dirección</string>
+    <string name="contact_number">Número de contacto</string>
+    <string name="invoice">Factura</string>
+    <string name="google_pay">Google Pay</string>
+    <string name="generate_invoice">Generar factura</string>
+    <string name="pay_with_google_pay">Pagar con Google Pay</string>
+    <string name="brandWithValue">Marca: %1$s</string>
+    <string name="categoryWithValue">Categoría: %1$s</string>
+    <string name="color_with_value">Color: %1$s</string>
+    <string name="decrease">Disminuir</string>
+    <string name="quantity">Cantidad</string>
+    <string name="increase">Aumentar</string>
+    <string name="add_to_cart">Añadir al carrito</string>
+    <string name="buy_now">Comprar ahora</string>
+</resources>

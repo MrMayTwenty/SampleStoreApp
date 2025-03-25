@@ -4,7 +4,6 @@ import android.content.Context
 import com.aaa.samplestore.common.Constants
 import com.aaa.samplestore.data.local.dao.CartDao
 import com.aaa.samplestore.data.local.database.AppDatabase
-import com.aaa.samplestore.data.local.sharedpreference.SessionManager
 import com.aaa.samplestore.data.remote.FakeStoreApi
 import com.aaa.samplestore.data.remote.interceptors.CurlLogInterceptor
 import com.aaa.samplestore.data.repository.CartRepository

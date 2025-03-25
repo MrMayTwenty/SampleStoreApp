@@ -13,6 +13,10 @@ android {
     namespace = "com.aaa.samplestore"
     compileSdk = 35
 
+    androidResources {
+        generateLocaleConfig = true
+    }
+
     room {
         schemaDirectory("$projectDir/schemas")
     }
@@ -111,4 +115,7 @@ dependencies {
     implementation(libs.room.runtime)
     ksp(libs.room.compiler)
     implementation(libs.room.ktx)
+
+    //jBCrypt
+    implementation(libs.jbcrypt)
 }

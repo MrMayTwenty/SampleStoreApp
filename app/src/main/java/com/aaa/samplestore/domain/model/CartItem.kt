@@ -4,6 +4,7 @@ import com.aaa.samplestore.data.local.entity.CartItemEntity
 
 data class CartItem(
     val cartId: Int? = null,
+    val userId: Int? = null,
     val productId: Int,
     val title: String,
     val brand: String,
@@ -15,6 +16,7 @@ data class CartItem(
 fun CartItem.toCartItemEntity(): CartItemEntity {
     return CartItemEntity(
         id = cartId ?: 0,
+        userId = userId,
         productId = productId,
         title = title,
         brand = brand,
