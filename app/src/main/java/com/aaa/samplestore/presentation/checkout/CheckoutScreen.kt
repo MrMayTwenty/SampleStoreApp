@@ -125,44 +125,13 @@ fun CheckoutScreen(
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Phone)
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.weight(1f))
 
-        // Payment Selection
-        Text("Payment Method:", fontWeight = FontWeight.Bold)
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            RadioButton(
-                selected = checkoutState.paymentMethod == stringResource(R.string.invoice),
-                onClick = { viewModel.onPaymentMethodChange("Invoice") }
-            )
-            Text("Invoice")
-            Spacer(modifier = Modifier.width(16.dp))
-            RadioButton(
-                selected = checkoutState.paymentMethod == stringResource(R.string.google_pay),
-                onClick = { viewModel.onPaymentMethodChange("Google Pay") }
-            )
-            Text("Google Pay")
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Invoice Button (only if Invoice is selected)
-        if (checkoutState.paymentMethod == "Invoice") {
-            Button(
-                onClick = { viewModel.generateInvoice() },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(stringResource(R.string.generate_invoice))
-            }
-        }
-
-        // Google Pay Button (only if Google Pay is selected)
-        if (checkoutState.paymentMethod == "Google Pay") {
-            Button(
-                onClick = { viewModel.processGooglePay(onPaymentSuccess) },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(stringResource(R.string.pay_with_google_pay))
-            }
+        Button(
+            onClick = { viewModel.processGooglePay(onPaymentSuccess) },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(stringResource(R.string.pay_with_paypal))
         }
 
     }

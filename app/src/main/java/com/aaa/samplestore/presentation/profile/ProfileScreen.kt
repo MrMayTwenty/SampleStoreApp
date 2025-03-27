@@ -78,7 +78,7 @@ fun ProfileScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Button(onClick = { onWishListClick },  modifier = Modifier.fillMaxWidth()) {
+            Button(onClick = { onWishListClick() },  modifier = Modifier.fillMaxWidth()) {
                 Text("Wishlist")
             }
 

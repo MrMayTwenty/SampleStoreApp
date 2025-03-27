@@ -44,4 +44,10 @@
     <string name="zipcode">Zipcode</string>
     <string name="wishlisted">Wishlisted</string>
     <string name="not_wishlisted">Not wishlisted</string>
+    <string name="remove_from_wishlist">Remove from wishlist</string>
+    <string name="pay_with_paypal">Pay with PayPal</string>
+    <string name="register">Register</string>
+    <string name="login">Login</string>
+    <string name="password_label">Password:</string>
+    <string name="email_label">Email:</string>
 </resources>

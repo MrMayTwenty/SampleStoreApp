@@ -14,6 +14,7 @@ data class AddUserRequest(
 
 data class Address(
     val city: String,
+    val geolocation: Geolocation? = null,
     val number: String,
     val street: String,
     val zipcode: String
@@ -22,6 +23,11 @@ data class Address(
 data class Name(
     val firstname: String,
     val lastname: String
+)
+
+data class Geolocation(
+    val lat: Double,
+    val long: Double
 )
 
 fun AddUserRequest.toEntity(): UserEntity = UserEntity(
@@ -39,18 +45,17 @@ fun AddUserRequest.toEntity(): UserEntity = UserEntity(
 fun AddUserRequest.toUser(): User = User(
     address = com.aaa.samplestore.domain.model.Address(
         city = address.city,
-        geolocation = null,
+        geolocation = com.aaa.samplestore.domain.model.Geolocation(
+            lat = address.geolocation.lat ?? 0.0,
+            long = address.geolocation.lat ?? 0.0),
         number = address.number,
-        street = address.street,
-        zipcode = address.zipcode
+        street = str(),
+        zipcode = TODO()
     ),
-    email = email,
-    id = 0,
-    name = com.aaa.samplestore.domain.model.Name(
-        firstname = name.firstname,
-        lastname = name.lastname
-    ),
-    password = password,
-    phone = phone,
-    username = username
+    email = em,
+    id = TODO(),
+    name = TODO(),
+    password = TODO(),
+    phone = TODO(),
+    username = TODO()
 )

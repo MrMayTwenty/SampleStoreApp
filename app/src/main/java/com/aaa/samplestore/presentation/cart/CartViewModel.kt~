@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aaa.samplestore.common.Resource
-import com.aaa.samplestore.data.local.sharedpreference.SessionManager
 import com.aaa.samplestore.domain.model.CartItem
 import com.aaa.samplestore.domain.usecase.GetCartUseCase
 import com.aaa.samplestore.domain.usecase.RemoveFromCartUseCase
@@ -19,17 +18,15 @@ import javax.inject.Inject
 class CartViewModel @Inject constructor(
     private val getCartUseCase: GetCartUseCase,
     private val removeFromCartUseCase: RemoveFromCartUseCase,
-    private val updateQuantityUseCase: UpdateQuantityUseCase,
-    private val sessionManager: SessionManager
+    private val updateQuantityUseCase: UpdateQuantityUseCase
 ) : ViewModel() {
 
     private val _cartItem = mutableStateOf(ViewModelState<List<CartItem>>())
     val cartItem: State<ViewModelState<List<CartItem>>> = _cartItem
 
     fun getCartItems() {
-        val userId = sessionManager.getUserId()
         viewModelScope.launch {
-            getCartUseCase.invoke(userId).collect { result ->
+            getCartUseCase.invoke().collect { result ->
                 when (result) {
                     is Resource.Error -> _cartItem.value = ViewModelState(error = result.message)
                     is Resource.Loading -> _cartItem.value = ViewModelState(isLoading = true)

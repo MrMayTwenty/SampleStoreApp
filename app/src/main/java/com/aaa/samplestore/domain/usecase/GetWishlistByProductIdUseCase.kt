@@ -18,8 +18,8 @@ class GetWishlistByProductIdUseCase @Inject constructor(
     operator fun invoke(id: Int): Flow<Resource<WishlistItem>> = flow {
         try {
             emit(Resource.Loading())
-            val cartItems = wishlistDao.getWishlistByProductId(id).toWishlistItem()
-            emit(Resource.Success(cartItems))
+            val wishlists = wishlistDao.getWishlistByProductId(id).toWishlistItem()
+            emit(Resource.Success(wishlists))
         } catch (e: Exception) {
             emit(Resource.Error(e.localizedMessage ?: context.getString(R.string.error_general_fallback_text)))
         }

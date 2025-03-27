@@ -128,8 +128,8 @@ class MainActivity : ComponentActivity() {
                             val viewModel = hiltViewModel<ProfileViewModel>()
                             ProfileScreen(
                                 viewModel,
-                                onLoginClick = {},
-                                onRegisterClick = {},
+                                onLoginClick = { navController.navigate(Screen.LoginScreen) },
+                                onRegisterClick = { navController.navigate(Screen.RegisterScreen)},
                                 onWishListClick = { navController.navigate(Screen.WishlistScreen)},
                                 onLogoutSuccess = {})
                         }

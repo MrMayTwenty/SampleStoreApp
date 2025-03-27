@@ -28,7 +28,9 @@ fun HeaderView(
     onSearch: (String) -> Unit,
     onProfileClick: () -> Unit,
     onCartClick: ()-> Unit,
-    shouldShowSearch: Boolean = false
+    shouldShowSearch: Boolean = false,
+    title: String = "",
+    shouldShowTitle: Boolean = false
 ) {
     var searchQuery by remember { mutableStateOf("") }
 
@@ -41,7 +43,7 @@ fun HeaderView(
     ) {
 
         Box(modifier = Modifier.weight(1f).height(60.dp)) {
-            if (shouldShowSearch)
+            if (shouldShowSearch) {
                 TextField(
                     modifier = Modifier.fillMaxSize(),
                     value = searchQuery,
@@ -51,6 +53,13 @@ fun HeaderView(
                     },
                     placeholder = { Text("Search...") },
                 )
+            }
+            if(shouldShowTitle){
+                Text(
+                    text = title,
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
         }
 
         IconButton(onClick = onCartClick) {

@@ -12,6 +12,8 @@ import com.aaa.samplestore.data.local.dao.UserDao
 import com.aaa.samplestore.data.local.dao.WishlistDao
 import com.aaa.samplestore.data.local.sharedpreference.SessionManager
 import com.aaa.samplestore.data.remote.dto.request.AddUserRequest
+import com.aaa.samplestore.data.remote.dto.request.toEntity
+import com.aaa.samplestore.data.remote.dto.request.toUser
 import com.aaa.samplestore.domain.model.User
 import com.aaa.samplestore.domain.model.toEntity
 import com.aaa.samplestore.domain.usecase.AddUserUseCase
@@ -40,8 +42,8 @@ class RegisterViewModel @Inject constructor(
                     is Resource.Loading -> _userState.value = ViewModelState(isLoading = true)
                     is Resource.Success -> {
                         result.data?.let {
-                            _userState.value = ViewModelState(data = it)
-                            val newUserId = userDao.insertUser(it.toEntity())
+                            _userState.value = ViewModelState(data = request.toUser())
+                            val newUserId = userDao.insertUser(request.toEntity())
                             cartDao.assignUserToUnownedCarts(newUserId.toInt())
                             wishlistDao.assignUserToUnownedWishlists(newUserId.toInt())
                             sessionManager.saveUserId(newUserId)

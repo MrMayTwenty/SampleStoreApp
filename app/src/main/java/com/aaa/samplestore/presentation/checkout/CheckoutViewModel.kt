@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aaa.samplestore.common.Resource
+import com.aaa.samplestore.data.local.sharedpreference.SessionManager
 import com.aaa.samplestore.domain.model.CartItem
 import com.aaa.samplestore.domain.model.Checkout
 import com.aaa.samplestore.domain.usecase.GetCartUseCase
@@ -15,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CheckoutViewModel @Inject constructor(
-    private val getCartUseCase: GetCartUseCase
+    private val getCartUseCase: GetCartUseCase,
+    private val sessionManager: SessionManager
 ) : ViewModel() {
 
     private val _checkoutState = mutableStateOf(Checkout())
@@ -64,8 +66,9 @@ class CheckoutViewModel @Inject constructor(
     }
 
     fun loadCartItems() {
+        val userId = sessionManager.getUserId()
         viewModelScope.launch {
-            getCartUseCase.invoke().collect { result ->
+            getCartUseCase.invoke(userId).collect { result ->
                 when (result) {
                     is Resource.Error ->  _cartState.value = ViewModelState(error = result.message)
                     is Resource.Loading -> _cartState.value = ViewModelState(isLoading = true)
