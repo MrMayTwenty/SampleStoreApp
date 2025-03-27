@@ -13,4 +13,7 @@ interface UserDao {
 
     @Query("SELECT * FROM users WHERE email = :email AND password_hashed = :passwordHashed")
     suspend fun getUser(email: String, passwordHashed: String): UserEntity?
+
+    @Query("SELECT * FROM users WHERE email = :email")
+    suspend fun getUser(email: String): UserEntity?
 }

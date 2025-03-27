@@ -25,11 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
     private val addUserUseCase: AddUserUseCase,
-    private val sessionManager: SessionManager,
-    private val userDao: UserDao,
-    private val cartDao: CartDao,
-    private val wishlistDao: WishlistDao
-): ViewModel() {
+) : ViewModel() {
 
     private val _userState = mutableStateOf(ViewModelState<User>())
     val userState: State<ViewModelState<User>> = _userState
@@ -37,18 +33,10 @@ class RegisterViewModel @Inject constructor(
     fun registerUser(request: AddUserRequest) {
         viewModelScope.launch {
             addUserUseCase.invoke(request).collect { result ->
-                when(result){
+                when (result) {
                     is Resource.Error -> _userState.value = ViewModelState(error = result.message)
                     is Resource.Loading -> _userState.value = ViewModelState(isLoading = true)
-                    is Resource.Success -> {
-                        result.data?.let {
-                            _userState.value = ViewModelState(data = request.toUser())
-                            val newUserId = userDao.insertUser(request.toEntity())
-                            cartDao.assignUserToUnownedCarts(newUserId.toInt())
-                            wishlistDao.assignUserToUnownedWishlists(newUserId.toInt())
-                            sessionManager.saveUserId(newUserId)
-                        }
-                    }
+                    is Resource.Success -> _userState.value = ViewModelState(data = request.toUser())
                 }
             }
         }

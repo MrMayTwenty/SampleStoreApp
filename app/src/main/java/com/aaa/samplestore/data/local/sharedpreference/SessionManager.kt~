@@ -39,7 +39,7 @@ class SessionManager @Inject constructor(
         }
         return null
     }
-
+    
     fun getUserId(): Long? {
         val userId = getLong(Constants.SessionKeys.USER_ID, -1L)
         return if (userId != -1L) userId else null

@@ -11,7 +11,10 @@ object Constants {
     }
 
     object SessionKeys {
-        const val USER_ID = "user_id"
+        const val USER_ID = "USER_ID"
+        const val USER_NAME = "USER_NAME"
+        const val USER_ADDRESS = "USER_ADDRESS"
+        const val USER_PHONE = "USER_PHONE"
     }
 
     enum class ProductFilter(val value: String) {
@@ -29,4 +32,5 @@ object Constants {
         GAMING("gaming"),
         APPLIANCES("appliances");
     }
+
 }

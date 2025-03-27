@@ -27,8 +27,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.aaa.samplestore.R
 
 @Composable
 fun ProfileScreen(
@@ -39,79 +41,75 @@ fun ProfileScreen(
     onLogoutSuccess: () -> Unit
 ) {
     val currentUserId = viewModel.getCurrentUserId()
-    val selectedLanguage = viewModel.selectedLanguage.value
-    val isDarkMode = viewModel.isDarkMode.value
+    val userName = viewModel.userNameState.value
+    val userAddress = viewModel.userAddressState.value
+    val userPhone = viewModel.userPhoneState.value
+
+    LaunchedEffect(Unit) {
+        viewModel.getUserProfile()
+    }
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
     ) {
         if (currentUserId == null) {
-            Box(
+            Card(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
+                    .fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp)
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .padding(16.dp)
                 ) {
                     Text(
-                        text = "Login or register to start shopping",
+                        text = stringResource(R.string.login_or_register_to_start_shopping),
                         style = MaterialTheme.typography.bodyMedium
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Button(onClick = onLoginClick, modifier = Modifier.fillMaxWidth()) {
-                        Text("Login")
+                        Text(stringResource(R.string.login))
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     TextButton(onClick = onRegisterClick, modifier = Modifier.fillMaxWidth()) {
-                        Text("Register")
-                    }
-            }
-            }
-        } else {
-//            userProfile?.let {
-//                Text(text = "Name: ${it.name}", style = MaterialTheme.typography.headlineMedium)
-//                Text(text = "Address: ${it.address}", style = MaterialTheme.typography.bodyMedium)
-//            }
-        }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(onClick = { onWishListClick() },  modifier = Modifier.fillMaxWidth()) {
-                Text("Wishlist")
-            }
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            // Settings Section
-            Card(
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text("Settings", style = MaterialTheme.typography.headlineSmall)
-                    Spacer(modifier = Modifier.height(8.dp))
-                    // Dark Mode Toggle
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text("Dark Mode:")
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Switch(
-                            checked = isDarkMode,
-                            onCheckedChange = { viewModel.toggleDarkMode() }
-                        )
+                        Text(stringResource(R.string.register))
                     }
                 }
             }
+        } else {
+            Text(
+                text = stringResource(R.string.name_value, userName),
+                style = MaterialTheme.typography.headlineMedium
+            )
+            Text(
+                text = stringResource(R.string.address_value, userAddress),
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Text(
+                text = stringResource(R.string.phone_value, userPhone),
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
 
-            Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
+        Button(onClick = { onWishListClick() }, modifier = Modifier.fillMaxWidth()) {
+            Text(stringResource(R.string.wishlist))
+        }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        if (currentUserId != null) {
             // Logout Button
-            Button(onClick = { viewModel.logout() }) {
-                Text("Logout")
+            Button(onClick = {
+                viewModel.logout()
+                onLogoutSuccess()
+            }, modifier = Modifier.fillMaxWidth()) {
+                Text(stringResource(R.string.logout))
             }
         }
     }
+}

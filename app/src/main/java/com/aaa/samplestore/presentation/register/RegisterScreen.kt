@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -24,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,7 +52,7 @@ fun RegisterScreen(
     var zipcode by remember { mutableStateOf("") }
     val userState = viewModel.userState.value
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(userState.data) {
         if(userState.data != null){
             onRegisterSuccess()
         }
@@ -64,7 +66,24 @@ fun RegisterScreen(
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Text("Register", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+        Text(stringResource(R.string.register), fontSize = 24.sp, fontWeight = FontWeight.Bold)
+
+        OutlinedTextField(
+            value = email,
+            onValueChange = { email = it },
+            label = { Text(stringResource(R.string.email)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        OutlinedTextField(
+            value = password,
+            onValueChange = { password = it },
+            label = { Text(stringResource(R.string.password)) },
+            visualTransformation = PasswordVisualTransformation(),
+            modifier = Modifier.fillMaxWidth()
+        )
+
 
         OutlinedTextField(
             value = firstName,
@@ -81,31 +100,10 @@ fun RegisterScreen(
         )
 
         OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text(stringResource(R.string.email)) },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        OutlinedTextField(
-            value = username,
-            onValueChange = { username = it },
-            label = { Text(stringResource(R.string.username)) },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text(stringResource(R.string.password)) },
-            visualTransformation = PasswordVisualTransformation(),
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        OutlinedTextField(
             value = phone,
             onValueChange = { phone = it },
             label = { Text(stringResource(R.string.phone_number)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -136,6 +134,7 @@ fun RegisterScreen(
             value = zipcode,
             onValueChange = { zipcode = it },
             label = { Text(stringResource(R.string.zipcode)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -154,7 +153,7 @@ fun RegisterScreen(
                     name = Name(firstName, lastName),
                     password = password,
                     phone = phone,
-                    username = username
+                    username = ""
                 )
                 viewModel.registerUser(user)
             },
@@ -163,7 +162,7 @@ fun RegisterScreen(
             if (userState.isLoading) {
                 CircularProgressIndicator(modifier = Modifier.size(24.dp), color = Color.White)
             } else {
-                Text("Register")
+                Text(stringResource(R.string.register))
             }
         }
     }

@@ -120,7 +120,7 @@ class MainActivity : ComponentActivity() {
                             val viewModel = hiltViewModel<RegisterViewModel>()
                             RegisterScreen(
                                 viewModel,
-                                onRegisterSuccess = { navController.navigate(Screen.LoginScreen) }
+                                onRegisterSuccess = { navController.navigate(Screen.ProductListScreen) }
                             )
                         }
 

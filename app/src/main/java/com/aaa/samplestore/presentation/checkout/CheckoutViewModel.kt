@@ -20,7 +20,10 @@ class CheckoutViewModel @Inject constructor(
     private val sessionManager: SessionManager
 ) : ViewModel() {
 
-    private val _checkoutState = mutableStateOf(Checkout())
+    private val _checkoutState = mutableStateOf(Checkout(
+        name = sessionManager.getUserName() ?: "",
+        address = sessionManager.getUserAddress() ?: "",
+        contactNumber = sessionManager.getUserPhone() ?: ""))
     val checkoutState: State<Checkout> = _checkoutState
 
     private val _cartState = mutableStateOf(ViewModelState<List<CartItem>>())

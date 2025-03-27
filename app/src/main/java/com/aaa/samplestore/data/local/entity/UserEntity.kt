@@ -5,6 +5,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.aaa.samplestore.common.Constants
 import com.aaa.samplestore.common.RoomConstants
+import com.aaa.samplestore.domain.model.Address
+import com.aaa.samplestore.domain.model.Name
+import com.aaa.samplestore.domain.model.User
 
 @Entity(tableName = RoomConstants.User.TABLE_NAME)
 data class UserEntity(
@@ -19,4 +22,23 @@ data class UserEntity(
     @ColumnInfo(name = RoomConstants.User.Columns.ZIPCODE)val zipCode: String,
     @ColumnInfo(name = RoomConstants.User.Columns.ADDRESS_NUMBER)val addressNumber: String
 
+)
+
+fun UserEntity.toUser(): User = User(
+    address = Address(
+        city = city,
+        geolocation = null,
+        number = addressNumber,
+        street = street,
+        zipcode = zipCode
+    ),
+    email = email,
+    id = id,
+    name = Name(
+        firstname = firstName,
+        lastname = lastName
+    ),
+    password = passwordHash,
+    phone = mobileNumber,
+    username = email
 )

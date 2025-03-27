@@ -50,4 +50,11 @@
     <string name="login">Login</string>
     <string name="password_label">Password:</string>
     <string name="email_label">Email:</string>
+    <string name="account_not_found">Account not found</string>
+    <string name="name_value">Name: %1$s</string>
+    <string name="address_value">Address: %1$s</string>
+    <string name="phone_value">Phone: %1$s</string>
+    <string name="login_or_register_to_start_shopping">Login or register to start shopping</string>
+    <string name="wishlist">Wishlist</string>
+    <string name="logout">Logout</string>
 </resources>
