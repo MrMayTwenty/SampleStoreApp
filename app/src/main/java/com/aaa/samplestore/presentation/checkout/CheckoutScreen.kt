@@ -1,5 +1,7 @@
 package com.aaa.samplestore.presentation.checkout
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -11,29 +13,38 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.aaa.samplestore.R
+import androidx.core.net.toUri
 
 @Composable
 fun CheckoutScreen(
     viewModel: CheckoutViewModel,
-    onPaymentSuccess: () -> Unit
+    onGetPayPalOrderSuccess: (String) -> Unit
 ) {
-    val checkoutState = viewModel.checkoutState.value
+    val checkoutState = viewModel.checkoutFormState.value
     val cartState = viewModel.cartState.value
+    val payPalOrderIdState = viewModel.payPalOrderIdState.value
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         viewModel.loadCartItems()
+    }
+
+    LaunchedEffect(payPalOrderIdState) {
+        if(payPalOrderIdState.data != null){
+            onGetPayPalOrderSuccess(payPalOrderIdState.data.orderId)
+        }
     }
 
     Column(modifier = Modifier
@@ -128,7 +139,7 @@ fun CheckoutScreen(
         Spacer(modifier = Modifier.weight(1f))
 
         Button(
-            onClick = { viewModel.processGooglePay(onPaymentSuccess) },
+            onClick = { viewModel.processPayPalPayment() },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(stringResource(R.string.pay_with_paypal))

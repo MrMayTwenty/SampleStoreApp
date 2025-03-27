@@ -1,3 +1,6 @@
+import java.util.Properties
+import kotlin.apply
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -21,6 +24,8 @@ android {
         schemaDirectory("$projectDir/schemas")
     }
 
+
+
     defaultConfig {
         applicationId = "com.aaa.samplestore"
         minSdk = 31
@@ -30,8 +35,11 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-
+        val projectProperties = readProperties(file("../project.properties"))
         buildConfigField("String","BASE_URL", "\"https://fakestoreapi.in/api/\"")
+        buildConfigField("String", "PAYPAL_BASE_URL", "\"https://api-m.sandbox.paypal.com/\"")
+        buildConfigField("String", "PAYPAL_CLIENT_ID", projectProperties["paypal_client_id"] as String)
+        buildConfigField("String", "PAYPAL_CLIENT_SECRET", projectProperties["paypal_client_secret"] as String)
     }
 
     buildTypes {
@@ -118,4 +126,15 @@ dependencies {
 
     //jBCrypt
     implementation(libs.jbcrypt)
+
+    //Paypal
+    implementation(libs.paypal.android.card.payment)
+//    implementation(libs.paypal.android.web.payment)
+
+}
+
+fun readProperties(propertiesFile: File) = Properties().apply {
+    propertiesFile.inputStream().use { fis ->
+        load(fis)
+    }
 }

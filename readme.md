@@ -1,0 +1,1 @@
+https://github.com/paypal/paypal-android/blob/main/v2_MIGRATION_GUIDE.md#paypal-native-payments

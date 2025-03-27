@@ -8,11 +8,14 @@ import com.aaa.samplestore.data.local.dao.WishlistDao
 import com.aaa.samplestore.data.local.database.AppDatabase
 import com.aaa.samplestore.data.local.sharedpreference.SessionManager
 import com.aaa.samplestore.data.remote.FakeStoreApi
+import com.aaa.samplestore.data.remote.PayPalApi
 import com.aaa.samplestore.data.remote.interceptors.CurlLogInterceptor
 import com.aaa.samplestore.data.repository.CartRepository
+import com.aaa.samplestore.data.repository.CheckOutRepository
 import com.aaa.samplestore.data.repository.ProductRepository
 import com.aaa.samplestore.data.repository.UserRepository
 import com.aaa.samplestore.domain.repository.ICartRepository
+import com.aaa.samplestore.domain.repository.ICheckOutRepository
 import com.aaa.samplestore.domain.repository.IProductRepository
 import com.aaa.samplestore.domain.repository.IUserRepository
 import dagger.Module
@@ -51,6 +54,26 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun providePayPalApi(): PayPalApi {
+        val loggingInterceptor = HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }
+
+        val okHttpClientBuilder = OkHttpClient.Builder()
+            .addInterceptor(CurlLogInterceptor())
+            .addInterceptor(loggingInterceptor)
+            .build()
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl(Constants.PAYPAL_BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(okHttpClientBuilder)
+            .build()
+        return retrofit.create(PayPalApi::class.java)
+    }
+
+    @Provides
+    @Singleton
     fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase = AppDatabase.getDatabase(context)
 
     @Provides
@@ -76,6 +99,10 @@ object AppModule {
     @Provides
     @Singleton
     fun provideCartRepository(cartDao: CartDao): ICartRepository = CartRepository(cartDao)
+
+    @Provides
+    @Singleton
+    fun provideCheckoutRepository(api: PayPalApi): ICheckOutRepository = CheckOutRepository(api)
 
     @Provides
     @Singleton

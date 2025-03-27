@@ -1,6 +1,8 @@
 package com.aaa.samplestore.presentation
 
+import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -19,6 +21,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.aaa.samplestore.common.Constants
 import com.aaa.samplestore.presentation.cart.CartScreen
 import com.aaa.samplestore.presentation.cart.CartViewModel
 import com.aaa.samplestore.presentation.checkout.CheckoutScreen
@@ -36,11 +39,25 @@ import com.aaa.samplestore.presentation.register.RegisterViewModel
 import com.aaa.samplestore.presentation.ui.theme.SampleStoreAppTheme
 import com.aaa.samplestore.presentation.wishlist.WishlistScreen
 import com.aaa.samplestore.presentation.wishlist.WishlistViewModel
+import com.paypal.android.cardpayments.Card
+import com.paypal.android.cardpayments.CardApproveOrderResult
+import com.paypal.android.cardpayments.CardAuthChallenge
+import com.paypal.android.cardpayments.CardClient
+import com.paypal.android.cardpayments.CardFinishApproveOrderResult
+import com.paypal.android.cardpayments.CardPresentAuthChallengeResult
+import com.paypal.android.cardpayments.CardRequest
+import com.paypal.android.cardpayments.threedsecure.SCA
+import com.paypal.android.corepayments.Address
+import com.paypal.android.corepayments.CoreConfig
+import com.paypal.android.corepayments.Environment
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    var authState: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -103,7 +120,9 @@ class MainActivity : ComponentActivity() {
                             val viewModel = hiltViewModel<CheckoutViewModel>()
                             CheckoutScreen(
                                 viewModel,
-                                onPaymentSuccess = { navController.navigate(Screen.ProductListScreen) }
+                                onGetPayPalOrderSuccess = { orderId ->
+                                   checkOut(orderId = orderId)
+                                }
                             )
                         }
 
@@ -144,6 +163,78 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        checkForCardAuthCompletion(intent)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        checkForCardAuthCompletion(intent)
+    }
+
+    fun checkOut(orderId: String){
+        val paypalConfig = CoreConfig(Constants.PAYPAL_CLIENT_ID, environment = Environment.SANDBOX)
+        val cardClient = CardClient(this, paypalConfig)
+        val card = Card(
+            number = "4032030060604767",
+            expirationMonth = "07",
+            expirationYear = "2030",
+            securityCode = "679",
+            billingAddress = Address(
+                streetAddress = "123 Main St.",
+                extendedAddress = "Apt. 1A",
+                locality = "Anytown",
+                region = "CA",
+                postalCode = "12345",
+                countryCode = "US"
+            )
+        )
+        val cardRequest = CardRequest(
+            orderId = orderId,
+            card = card,
+            returnUrl = "com.aaa.samplestore://return_url",
+            sca = SCA.SCA_ALWAYS,
+        )
+
+        cardClient.approveOrder(cardRequest) { callback ->
+            when(callback){
+                is CardApproveOrderResult.AuthorizationRequired -> presentAuthChallenge(authChallenge = callback.authChallenge)
+                is CardApproveOrderResult.Failure -> TODO("Handle approve order failure")
+                is CardApproveOrderResult.Success -> TODO("Capture or authorize order on server")
+            }
+        }
+    }
+
+    fun presentAuthChallenge(authChallenge: CardAuthChallenge){
+        val paypalConfig = CoreConfig(Constants.PAYPAL_CLIENT_ID, environment = Environment.SANDBOX)
+        val cardClient = CardClient(this, paypalConfig)
+        when(val result = cardClient.presentAuthChallenge(this,authChallenge)){
+            is CardPresentAuthChallengeResult.Failure -> TODO("Handle Present Auth Challenge Failure")
+            is CardPresentAuthChallengeResult.Success -> {
+                // Capture auth state for balancing call to finishApproveOrder()/finishVault() when
+                // the merchant application re-enters the foreground
+                authState = result.authState
+            }
+        }
+    }
+
+    fun checkForCardAuthCompletion(intent: Intent) = authState?.let { state ->
+        val paypalConfig = CoreConfig(Constants.PAYPAL_CLIENT_ID, environment = Environment.SANDBOX)
+        val cardClient = CardClient(this, paypalConfig)
+        when (val approveOrderResult = cardClient.finishApproveOrder(intent,state)){
+            is CardFinishApproveOrderResult.Canceled -> authState = null
+            is CardFinishApproveOrderResult.Failure -> authState = null
+            is CardFinishApproveOrderResult.NoResult -> authState = null
+            is CardFinishApproveOrderResult.Success -> {
+                //Authorize Order
+                authState = null
+            }
+        }
+    }
+
+
 
 }
 

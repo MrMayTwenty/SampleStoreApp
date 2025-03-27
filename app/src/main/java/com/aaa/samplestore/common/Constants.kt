@@ -4,10 +4,14 @@ import com.aaa.samplestore.BuildConfig
 
 object Constants {
     const val BASE_URL = BuildConfig.BASE_URL
+    const val PAYPAL_BASE_URL = BuildConfig.PAYPAL_BASE_URL
+    const val PAYPAL_CLIENT_ID = BuildConfig.PAYPAL_CLIENT_ID
+    const val PAYPAL_CLIENT_SECRET = BuildConfig.PAYPAL_CLIENT_SECRET
 
     object SharedPref {
+        const val ENCRYPTED_SHARED_PREF_NAME = "encrypted_shared_pref"
         const val PREF_NAME = "sample_store_pref"
-        const val LANGUAGE = "language"
+        const val PAYPAL_OAUTH_ACCESS_TOKEN = "PAYPAL_OAUTH_ACCESS_TOKEN"
     }
 
     object SessionKeys {
