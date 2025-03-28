@@ -22,6 +22,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.aaa.samplestore.common.Constants
+import com.aaa.samplestore.presentation.card.CardScreen
+import com.aaa.samplestore.presentation.card.CardViewModel
 import com.aaa.samplestore.presentation.cart.CartScreen
 import com.aaa.samplestore.presentation.cart.CartViewModel
 import com.aaa.samplestore.presentation.checkout.CheckoutScreen
@@ -57,14 +59,17 @@ import java.util.Locale
 class MainActivity : ComponentActivity() {
 
     var authState: String? = null
+    private lateinit var navigationViewModel: NavigationViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             SampleStoreAppTheme {
+                navigationViewModel = hiltViewModel<NavigationViewModel>()
                 val loginViewModel = hiltViewModel<LoginViewModel>()
                 val navController = rememberNavController()
+                navigationViewModel.navController = navController
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     NavHost(
                         navController = navController,
@@ -121,7 +126,8 @@ class MainActivity : ComponentActivity() {
                             CheckoutScreen(
                                 viewModel,
                                 onGetPayPalOrderSuccess = { orderId ->
-                                   checkOut(orderId = orderId)
+//                                   checkOut(orderId = orderId)
+                                    navController.navigate(Screen.CardScreen(orderId))
                                 }
                             )
                         }
@@ -158,6 +164,14 @@ class MainActivity : ComponentActivity() {
                             WishlistScreen(viewModel,
                                 onProductClick = { productId -> navController.navigate(Screen.ProductDetailScreen(productId))})
                         }
+
+                        composable<Screen.CardScreen>{ backStackEntry ->
+                            val viewModel = hiltViewModel<CardViewModel>()
+                            val cardScreen: Screen.CardScreen = backStackEntry.toRoute()
+                            CardScreen(viewModel,cardScreen.orderId, onRequestApproveOrder = { cardRequest ->
+                                checkOut(cardRequest)
+                            })
+                        }
                     }
                 }
             }
@@ -174,30 +188,9 @@ class MainActivity : ComponentActivity() {
         checkForCardAuthCompletion(intent)
     }
 
-    fun checkOut(orderId: String){
+    fun checkOut(cardRequest: CardRequest){
         val paypalConfig = CoreConfig(Constants.PAYPAL_CLIENT_ID, environment = Environment.SANDBOX)
         val cardClient = CardClient(this, paypalConfig)
-        val card = Card(
-            number = "4032030060604767",
-            expirationMonth = "07",
-            expirationYear = "2030",
-            securityCode = "679",
-            billingAddress = Address(
-                streetAddress = "123 Main St.",
-                extendedAddress = "Apt. 1A",
-                locality = "Anytown",
-                region = "CA",
-                postalCode = "12345",
-                countryCode = "US"
-            )
-        )
-        val cardRequest = CardRequest(
-            orderId = orderId,
-            card = card,
-            returnUrl = "com.aaa.samplestore://return_url",
-            sca = SCA.SCA_ALWAYS,
-        )
-
         cardClient.approveOrder(cardRequest) { callback ->
             when(callback){
                 is CardApproveOrderResult.AuthorizationRequired -> presentAuthChallenge(authChallenge = callback.authChallenge)
@@ -229,6 +222,9 @@ class MainActivity : ComponentActivity() {
             is CardFinishApproveOrderResult.NoResult -> authState = null
             is CardFinishApproveOrderResult.Success -> {
                 //Authorize Order
+                navigationViewModel.navController?.navigate(Screen.ProductListScreen) {
+                    popUpTo(Screen.ProductListScreen) { inclusive = true }
+                }
                 authState = null
             }
         }

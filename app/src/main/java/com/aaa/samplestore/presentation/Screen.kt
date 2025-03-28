@@ -19,4 +19,6 @@ sealed class Screen() {
     object ProfileScreen : Screen()
     @Serializable
     object WishlistScreen: Screen()
+    @Serializable
+    data class CardScreen(val orderId: String)
 }

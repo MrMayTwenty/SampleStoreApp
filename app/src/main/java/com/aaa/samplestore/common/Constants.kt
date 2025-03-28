@@ -8,6 +8,11 @@ object Constants {
     const val PAYPAL_CLIENT_ID = BuildConfig.PAYPAL_CLIENT_ID
     const val PAYPAL_CLIENT_SECRET = BuildConfig.PAYPAL_CLIENT_SECRET
 
+    const val TEST_CARD_NUMBER = "4032030060604767"
+    const val TEST_CARD_CVV = "679"
+    const val TEST_CARD_EXPIRY_MONTH = "07"
+    const val TEST_CARD_EXPIRY_YEAR = "2030"
+
     object SharedPref {
         const val ENCRYPTED_SHARED_PREF_NAME = "encrypted_shared_pref"
         const val PREF_NAME = "sample_store_pref"
