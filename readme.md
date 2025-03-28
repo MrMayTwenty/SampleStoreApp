@@ -29,7 +29,7 @@ SampleStoreApp is a modern shopping application built using **Jetpack Compose** 
 
 ## Create Secret Properties
 1. Change Project View from **Android** to **Project**
-2. Create `project.properties` file
+2. Create `secret.properties` file
 3. Add the following code
 ```
 paypal_client_id:{request to agafrancisDroid@gmail.com}

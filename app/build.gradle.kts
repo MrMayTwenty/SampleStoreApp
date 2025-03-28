@@ -35,7 +35,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        val projectProperties = readProperties(file("../project.properties"))
+        val projectProperties = readProperties(file("../secret.properties"))
         buildConfigField("String","BASE_URL", "\"https://fakestoreapi.in/api/\"")
         buildConfigField("String", "PAYPAL_BASE_URL", "\"https://api-m.sandbox.paypal.com/\"")
         buildConfigField("String", "PAYPAL_CLIENT_ID", projectProperties["paypal_client_id"] as String)
