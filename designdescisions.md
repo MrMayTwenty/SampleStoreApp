@@ -52,7 +52,7 @@
 - **Challenge:** PayPal Sandbox API inconsistencies caused failed transactions. Outdated documentation on the Android SDK, deprecated methods, and refactored code made integration difficult.
 - **Solution:** Debugged using **API logs** and adjusted **callback handling**.
     - Read updated documentation and cross-referenced it with the **[PayPal GitHub repository](https://github.com/paypal/paypal-android)** .
-    - Followed the **PayPal Migration Guide**:  
+    - Followed the **PayPal Migration Guide**, but it was not optimized for Jetpack Compose as it relied on `MainActivity` and XML-based views.
       [PayPal Native Payments Migration Guide](https://github.com/paypal/paypal-android/blob/main/v2_MIGRATION_GUIDE.md#paypal-native-payments).
-
+    - Adapted the implementation to work seamlessly with Jetpack Compose while ensuring compatibility with PayPal's updated SDK.
 ---
