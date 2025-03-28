@@ -23,10 +23,16 @@ fun LoginScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf<String?>(null) }
+    var userState = viewModel.userState.value
+
+    LaunchedEffect(viewModel.userState.value.data) {
+        viewModel.userState.value.data?.let {
+            user -> onLoginSuccess()
+        }
+    }
 
     Card(
         modifier = Modifier
-            .fillMaxSize()
             .padding(16.dp),
         shape = RoundedCornerShape(12.dp)
     ) {
@@ -51,6 +57,7 @@ fun LoginScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp),
+                singleLine = true,
                 textStyle = MaterialTheme.typography.bodyLarge
             )
 
@@ -62,6 +69,7 @@ fun LoginScreen(
                     .fillMaxWidth()
                     .padding(8.dp),
                 visualTransformation = PasswordVisualTransformation(),
+                singleLine = true,
                 textStyle = MaterialTheme.typography.bodyLarge
             )
 
@@ -72,16 +80,22 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Button(onClick = {
-                viewModel.login(email, password)
-            }, modifier = Modifier.fillMaxWidth()) {
-                Text(text = stringResource(R.string.login))
+            Button(
+                onClick = {
+                    viewModel.login(email, password)
+                },
+                modifier = Modifier.fillMaxWidth(),
+                enabled = !userState.isLoading
+            ) {
+                if (userState.isLoading) CircularProgressIndicator()
+                else Text(text = stringResource(R.string.login))
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            TextButton(onClick = onRegisterClick) {
-                Text(text = stringResource(R.string.register))
+            TextButton(onClick = onRegisterClick, enabled = !userState.isLoading) {
+                if (userState.isLoading) CircularProgressIndicator()
+                else Text(text = stringResource(R.string.register))
             }
         }
     }

@@ -61,4 +61,12 @@
     <string name="mm">MM</string>
     <string name="yyyy">YYYY</string>
     <string name="cvv">CVV</string>
+    <string name="profile">Profile</string>
+    <string name="card_details">Card Details</string>
+    <string name="reset_test_card">Reset Test Card</string>
+    <string name="submit">Submit</string>
+    <string name="search_textfield">Search...</string>
+    <string name="thank_you">Thank you!</string>
+    <string name="product_successfully_purchased">Product successfully purchased</string>
+    <string name="ok">OK</string>
 </resources>

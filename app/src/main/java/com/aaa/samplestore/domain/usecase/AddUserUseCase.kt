@@ -31,10 +31,16 @@ class AddUserUseCase @Inject constructor(
     operator fun invoke(request: AddUserRequest): Flow<Resource<Int>> = flow {
         try {
             emit(Resource.Loading())
-            val updatedRequest = request.copy(password = BCrypt.hashpw(request.password, BCrypt.gensalt(12)))
+            var existingUser = userDao.getUser(request.email)
+            existingUser?.let {
+                emit(Resource.Error("User already existing"))
+                return@flow
+            }
+            val hashedPassword = BCrypt.hashpw(request.password, BCrypt.gensalt(4))
+            val updatedRequest = request.copy(password = hashedPassword)
             val response = userRepository.createUser(updatedRequest)
             if(response.status == "SUCCESS"){
-                val newUserId = userDao.insertUser(request.toEntity())
+                val newUserId = userDao.insertUser(updatedRequest.toEntity())
                 cartDao.assignUserToUnownedCarts(newUserId.toInt())
                 wishlistDao.assignUserToUnownedWishlists(newUserId.toInt())
                 sessionManager.saveUserId(newUserId)

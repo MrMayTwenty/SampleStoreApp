@@ -6,9 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aaa.samplestore.common.Resource
 import com.aaa.samplestore.data.local.sharedpreference.SessionManager
+import com.aaa.samplestore.data.local.sharedpreference.SharedPreferenceManager
+import com.aaa.samplestore.data.remote.dto.PayPalCaptureResponse
 import com.aaa.samplestore.domain.model.CartItem
 import com.aaa.samplestore.domain.model.Checkout
 import com.aaa.samplestore.domain.model.PayPalOrderStatus
+import com.aaa.samplestore.domain.usecase.CapturePaymentUseCase
 import com.aaa.samplestore.domain.usecase.GetPayPalOrderIdUseCase
 import com.aaa.samplestore.domain.usecase.GetCartUseCase
 import com.aaa.samplestore.presentation.ViewModelState
@@ -21,6 +24,8 @@ class CheckoutViewModel @Inject constructor(
     private val getCartUseCase: GetCartUseCase,
     private val sessionManager: SessionManager,
     private val getPayPalOrderIdUseCase: GetPayPalOrderIdUseCase,
+    private val capturePaymentUseCase: CapturePaymentUseCase,
+    private val sharedPreferenceManager: SharedPreferenceManager
 ) : ViewModel() {
 
     private val _checkoutFormState = mutableStateOf(Checkout(
@@ -31,6 +36,9 @@ class CheckoutViewModel @Inject constructor(
 
     private val _payPalOrderIdState = mutableStateOf(ViewModelState<PayPalOrderStatus>())
     val payPalOrderIdState: State<ViewModelState<PayPalOrderStatus>> = _payPalOrderIdState
+
+    private val _capturePaymentState = mutableStateOf(ViewModelState<PayPalCaptureResponse>())
+    val capturePaymentState: State<ViewModelState<PayPalCaptureResponse>> = _capturePaymentState
 
     private val _cartState = mutableStateOf(ViewModelState<List<CartItem>>())
     val cartState: State<ViewModelState<List<CartItem>>> = _cartState
@@ -70,6 +78,22 @@ class CheckoutViewModel @Inject constructor(
                     is Resource.Error -> _payPalOrderIdState.value = ViewModelState(error = result.message)
                     is Resource.Loading -> _payPalOrderIdState.value = ViewModelState(isLoading = true)
                     is Resource.Success -> _payPalOrderIdState.value = ViewModelState(data = result.data)
+                }
+            }
+        }
+    }
+
+    fun capturePayment(orderId: String){
+        viewModelScope.launch {
+            capturePaymentUseCase.invoke(orderId).collect { result ->
+                when(result){
+                    is Resource.Error -> _capturePaymentState.value = ViewModelState(error = result.message)
+                    is Resource.Loading -> _capturePaymentState.value = ViewModelState(isLoading = true)
+                    is Resource.Success -> {
+                        sharedPreferenceManager.savePurchaseSuccessState(true)
+                        _capturePaymentState.value = ViewModelState(data = result.data)
+
+                    }
                 }
             }
         }

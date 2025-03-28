@@ -2,6 +2,7 @@ package com.aaa.samplestore.data.repository
 
 import com.aaa.samplestore.common.Constants
 import com.aaa.samplestore.data.remote.PayPalApi
+import com.aaa.samplestore.data.remote.dto.PayPalCaptureResponse
 import com.aaa.samplestore.data.remote.dto.request.PayPalOrderRequest
 import com.aaa.samplestore.data.remote.dto.response.PayPalAuthResponse
 import com.aaa.samplestore.data.remote.dto.response.PayPalOrderResponse
@@ -19,5 +20,12 @@ class CheckOutRepository @Inject constructor(
 
     override suspend fun createOrderId(authorization: String, orderRequest: PayPalOrderRequest): PayPalOrderResponse {
         return payPalApi.createOrder(authorization, orderRequest = orderRequest)
+    }
+
+    override suspend fun captureOrder(
+        authorization: String,
+        orderId: String
+    ): PayPalCaptureResponse {
+        return payPalApi.captureOrder(authorization, orderId = orderId)
     }
 }

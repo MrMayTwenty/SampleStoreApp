@@ -9,6 +9,7 @@ import com.aaa.samplestore.data.local.dao.WishlistDao
 import com.aaa.samplestore.data.local.sharedpreference.SessionManager
 import com.aaa.samplestore.domain.model.WishlistItem
 import com.aaa.samplestore.domain.usecase.GetWishlistByUserIdUseCase
+import com.aaa.samplestore.domain.usecase.RemoveWishlistUseCase
 import com.aaa.samplestore.presentation.ViewModelState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -17,6 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class WishlistViewModel @Inject constructor(
     private val getWishlistByUserIdUseCase: GetWishlistByUserIdUseCase,
+    private val removeWishlistUseCase: RemoveWishlistUseCase,
     private val sessionManager: SessionManager,
 ): ViewModel() {
 
@@ -36,5 +38,20 @@ class WishlistViewModel @Inject constructor(
         }
     }
 
-    fun removeProductFromWishlist(wishListId: Int) {}
+    fun removeProductFromWishlist(wishListId: Int) {
+        viewModelScope.launch {
+            removeWishlistUseCase.invoke(wishListId).collect { result ->
+                when (result) {
+                    is Resource.Error -> _wishlistState.value = _wishlistState.value.copy(error = result.message)
+                    is Resource.Loading -> _wishlistState.value = _wishlistState.value.copy(isLoading = true)
+                    is Resource.Success -> {
+                        _wishlistState.value = _wishlistState.value.copy(
+                            data = _wishlistState.value.data?.filterNot { it.wishlistItemId == wishListId },
+                            isLoading = false
+                        )
+                    }
+                }
+            }
+        }
+    }
 }

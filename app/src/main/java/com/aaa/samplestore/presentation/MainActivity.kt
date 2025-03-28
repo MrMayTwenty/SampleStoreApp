@@ -4,15 +4,24 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.os.LocaleListCompat
@@ -53,24 +62,62 @@ import com.paypal.android.corepayments.Address
 import com.paypal.android.corepayments.CoreConfig
 import com.paypal.android.corepayments.Environment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.util.Locale
+import kotlin.invoke
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     var authState: String? = null
     private lateinit var navigationViewModel: NavigationViewModel
+    private val checkoutViewModel: CheckoutViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
         setContent {
+
+            LaunchedEffect(checkoutViewModel.capturePaymentState.value) {
+                checkoutViewModel.capturePaymentState.value.data?.let {
+                    navigationViewModel.navController?.navigate(Screen.ProductListScreen) {
+                        popUpTo(Screen.ProductListScreen) { inclusive = true }
+                    }
+                }
+            }
+
             SampleStoreAppTheme {
                 navigationViewModel = hiltViewModel<NavigationViewModel>()
                 val loginViewModel = hiltViewModel<LoginViewModel>()
                 val navController = rememberNavController()
                 navigationViewModel.navController = navController
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+
+                val snackBarHostState = remember {
+                    SnackbarHostState()
+                }
+                val scope = rememberCoroutineScope()
+                ObserverAsEvents(flow = SnackbarController.events, snackBarHostState) { event ->
+                    scope.launch {
+                        snackBarHostState.currentSnackbarData?.dismiss()
+                        var result = snackBarHostState.showSnackbar(
+                            message = event.message,
+                            actionLabel = event.action?.name,
+                            duration = SnackbarDuration.Long
+                        )
+
+                        if (result == SnackbarResult.ActionPerformed) {
+                            event.action?.action?.invoke()
+                        }
+                    }
+                }
+
+                Scaffold(modifier = Modifier.fillMaxSize(),
+                    snackbarHost = {
+                        SnackbarHost(
+                            hostState = snackBarHostState
+                        )
+                    },) { innerPadding ->
                     NavHost(
                         navController = navController,
                         startDestination = Screen.ProductListScreen,
@@ -88,7 +135,7 @@ class MainActivity : ComponentActivity() {
                                     )
                                 },
                                 onCartClick = { navController.navigate(Screen.CartScreen) },
-                                onProfileClick = { navController.navigate(Screen.ProfileScreen) }
+                                onProfileClick = { navController.navigate(Screen.ProfileScreen) },
                             )
                         }
 
@@ -156,7 +203,7 @@ class MainActivity : ComponentActivity() {
                                 onLoginClick = { navController.navigate(Screen.LoginScreen) },
                                 onRegisterClick = { navController.navigate(Screen.RegisterScreen)},
                                 onWishListClick = { navController.navigate(Screen.WishlistScreen)},
-                                onLogoutSuccess = {})
+                                onLogoutSuccess = { navController.navigate(Screen.ProductListScreen)})
                         }
 
                         composable<Screen.WishlistScreen> {
@@ -166,8 +213,8 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable<Screen.CardScreen>{ backStackEntry ->
-                            val viewModel = hiltViewModel<CardViewModel>()
                             val cardScreen: Screen.CardScreen = backStackEntry.toRoute()
+                            val viewModel = hiltViewModel<CardViewModel>()
                             CardScreen(viewModel,cardScreen.orderId, onRequestApproveOrder = { cardRequest ->
                                 checkOut(cardRequest)
                             })
@@ -194,8 +241,12 @@ class MainActivity : ComponentActivity() {
         cardClient.approveOrder(cardRequest) { callback ->
             when(callback){
                 is CardApproveOrderResult.AuthorizationRequired -> presentAuthChallenge(authChallenge = callback.authChallenge)
-                is CardApproveOrderResult.Failure -> TODO("Handle approve order failure")
-                is CardApproveOrderResult.Success -> TODO("Capture or authorize order on server")
+                is CardApproveOrderResult.Failure -> Toast.makeText(this, callback.error.message, Toast.LENGTH_LONG).show()
+                is CardApproveOrderResult.Success ->
+                    navigationViewModel.navController?.navigate(Screen.ProductListScreen) {
+                        popUpTo(Screen.ProductListScreen) { inclusive = true }
+                    }
+
             }
         }
     }
@@ -204,10 +255,8 @@ class MainActivity : ComponentActivity() {
         val paypalConfig = CoreConfig(Constants.PAYPAL_CLIENT_ID, environment = Environment.SANDBOX)
         val cardClient = CardClient(this, paypalConfig)
         when(val result = cardClient.presentAuthChallenge(this,authChallenge)){
-            is CardPresentAuthChallengeResult.Failure -> TODO("Handle Present Auth Challenge Failure")
+            is CardPresentAuthChallengeResult.Failure -> Toast.makeText(this, result.error.message, Toast.LENGTH_LONG).show()
             is CardPresentAuthChallengeResult.Success -> {
-                // Capture auth state for balancing call to finishApproveOrder()/finishVault() when
-                // the merchant application re-enters the foreground
                 authState = result.authState
             }
         }
@@ -222,9 +271,7 @@ class MainActivity : ComponentActivity() {
             is CardFinishApproveOrderResult.NoResult -> authState = null
             is CardFinishApproveOrderResult.Success -> {
                 //Authorize Order
-                navigationViewModel.navController?.navigate(Screen.ProductListScreen) {
-                    popUpTo(Screen.ProductListScreen) { inclusive = true }
-                }
+                checkoutViewModel.capturePayment(approveOrderResult.orderId)
                 authState = null
             }
         }

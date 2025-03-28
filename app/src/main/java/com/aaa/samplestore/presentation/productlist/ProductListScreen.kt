@@ -29,6 +29,8 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -63,6 +65,7 @@ import com.aaa.samplestore.presentation.components.ErrorView
 import com.aaa.samplestore.presentation.components.HeaderView
 import com.aaa.samplestore.presentation.components.LoadingView
 import com.aaa.samplestore.presentation.components.SaleBadge
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 @Composable
 fun ProductListScreen(
@@ -76,6 +79,7 @@ fun ProductListScreen(
     val selectedCategory = viewModel.selectedCategory.value
     val addToCartState = viewModel.addToCartState.value
     val currentUserId = viewModel.getCurrentUserId()
+    val shouldShowPurchaseSuccessDialog = viewModel.purchaseSuccessState.value
 
 
     LaunchedEffect(Unit) {
@@ -84,20 +88,45 @@ fun ProductListScreen(
         }
     }
 
+    if(shouldShowPurchaseSuccessDialog){
+        AlertDialog(
+            onDismissRequest = {
+                viewModel.disablePurchaseSuccessState()
+            },
+            title = {
+                Text(text = stringResource(R.string.thank_you))
+            },
+            text = {
+                Text(text = stringResource(R.string.product_successfully_purchased))
+            },
+            confirmButton = {
+                Button(onClick = {
+                    viewModel.disablePurchaseSuccessState()
+                }) {
+                    Text(text = stringResource(R.string.ok))
+                }
+            }
+        )
+    }
+
     Scaffold(
         topBar = {
             HeaderView(
                 onSearch = { query ->  },
                 onCartClick = onCartClick,
                 onProfileClick = onProfileClick,
-                shouldShowSearch = true
+                shouldShowSearch = false,
+                shouldShowProfile = true,
+                shouldShowCart = true
             )
         },
         bottomBar = { BottomFilter(
             selectedFilter = selectedFilter.value,
             onFilterSelected = {
                 when(it) {
-                    Constants.ProductFilter.ALL -> viewModel.showAllProducts()
+                    Constants.ProductFilter.ALL -> {
+                        viewModel.showAllProducts()
+                    }
                     Constants.ProductFilter.POPULAR -> viewModel.showPopularProducts()
                     Constants.ProductFilter.SALE -> viewModel.showSaleProducts()
                 }
@@ -125,11 +154,11 @@ fun ProductListScreen(
                     Constants.ProductCategory.MOBILE to R.string.mobile,
                     Constants.ProductCategory.APPLIANCES to R.string.appliances)
 
-                categories.forEach { (filter, resId) ->
+                categories.forEach { (category, resId) ->
                     PillButton(
                         text = stringResource(resId),
-                        selected = selectedFilter.value == filter.value,
-                        onClick = { viewModel.showProductsByCategory(filter)},
+                        selected = selectedCategory.value == category.value,
+                        onClick = { viewModel.showProductsByCategory(category)},
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                 }

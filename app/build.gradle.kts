@@ -131,6 +131,9 @@ dependencies {
     implementation(libs.paypal.android.card.payment)
 //    implementation(libs.paypal.android.web.payment)
 
+    //Google Fonts
+    implementation(libs.google.fonts.compose)
+
 }
 
 fun readProperties(propertiesFile: File) = Properties().apply {

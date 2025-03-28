@@ -1,6 +1,7 @@
 package com.aaa.samplestore.presentation.register
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +15,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,6 +36,7 @@ import com.aaa.samplestore.R
 import com.aaa.samplestore.data.remote.dto.request.AddUserRequest
 import com.aaa.samplestore.data.remote.dto.request.Address
 import com.aaa.samplestore.data.remote.dto.request.Name
+import com.aaa.samplestore.presentation.components.HeaderView
 
 @Composable
 fun RegisterScreen(
@@ -58,112 +61,118 @@ fun RegisterScreen(
         }
     }
 
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        Text(stringResource(R.string.register), fontSize = 24.sp, fontWeight = FontWeight.Bold)
-
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text(stringResource(R.string.email)) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text(stringResource(R.string.password)) },
-            visualTransformation = PasswordVisualTransformation(),
-            modifier = Modifier.fillMaxWidth()
-        )
-
-
-        OutlinedTextField(
-            value = firstName,
-            onValueChange = { firstName = it },
-            label = { Text(stringResource(R.string.first_name)) },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        OutlinedTextField(
-            value = lastName,
-            onValueChange = { lastName = it },
-            label = { Text(stringResource(R.string.last_name)) },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        OutlinedTextField(
-            value = phone,
-            onValueChange = { phone = it },
-            label = { Text(stringResource(R.string.phone_number)) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Text("Address", fontWeight = FontWeight.Bold)
-
-        OutlinedTextField(
-            value = street,
-            onValueChange = { street = it },
-            label = { Text(stringResource(R.string.street)) },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        OutlinedTextField(
-            value = number,
-            onValueChange = { number = it },
-            label = { Text(stringResource(R.string.house_number)) },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        OutlinedTextField(
-            value = city,
-            onValueChange = { city = it },
-            label = { Text(stringResource(R.string.city)) },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        OutlinedTextField(
-            value = zipcode,
-            onValueChange = { zipcode = it },
-            label = { Text(stringResource(R.string.zipcode)) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(
-            onClick = {
-                val user = AddUserRequest(
-                    address = Address(
-                        city = city,
-                        number = number,
-                        street = street,
-                        zipcode = zipcode
-                    ),
-                    email = email,
-                    name = Name(firstName, lastName),
-                    password = password,
-                    phone = phone,
-                    username = ""
+    Scaffold (
+        topBar = { HeaderView(
+            title = stringResource(R.string.register),
+            shouldShowTitle = true
+        ) }
+    ) { innerPadding ->
+        Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(12.dp)
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                OutlinedTextField(
+                    value = email,
+                    onValueChange = { email = it },
+                    label = { Text(stringResource(R.string.email)) },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
                 )
-                viewModel.registerUser(user)
-            },
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            if (userState.isLoading) {
-                CircularProgressIndicator(modifier = Modifier.size(24.dp), color = Color.White)
-            } else {
-                Text(stringResource(R.string.register))
+                OutlinedTextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    label = { Text(stringResource(R.string.password)) },
+                    visualTransformation = PasswordVisualTransformation(),
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    value = firstName,
+                    onValueChange = { firstName = it },
+                    label = { Text(stringResource(R.string.first_name)) },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    value = lastName,
+                    onValueChange = { lastName = it },
+                    label = { Text(stringResource(R.string.last_name)) },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    value = phone,
+                    onValueChange = { phone = it },
+                    label = { Text(stringResource(R.string.phone_number)) },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Text("Address", fontWeight = FontWeight.Bold)
+                OutlinedTextField(
+                    value = street,
+                    onValueChange = { street = it },
+                    label = { Text(stringResource(R.string.street)) },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    value = number,
+                    onValueChange = { number = it },
+                    label = { Text(stringResource(R.string.house_number)) },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    value = city,
+                    onValueChange = { city = it },
+                    label = { Text(stringResource(R.string.city)) },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    value = zipcode,
+                    onValueChange = { zipcode = it },
+                    label = { Text(stringResource(R.string.zipcode)) },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(
+                    onClick = {
+                        val user = AddUserRequest(
+                            address = Address(
+                                city = city,
+                                number = number,
+                                street = street,
+                                zipcode = zipcode
+                            ),
+                            email = email,
+                            name = Name(firstName, lastName),
+                            password = password,
+                            phone = phone,
+                            username = ""
+                        )
+                        viewModel.registerUser(user)
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    if (userState.isLoading) {
+                        CircularProgressIndicator(modifier = Modifier.size(24.dp), color = Color.White)
+                    } else {
+                        Text(stringResource(R.string.register))
+                    }
+                }
             }
         }
+
     }
+
+
 }

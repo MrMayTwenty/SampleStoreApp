@@ -17,6 +17,7 @@ object Constants {
         const val ENCRYPTED_SHARED_PREF_NAME = "encrypted_shared_pref"
         const val PREF_NAME = "sample_store_pref"
         const val PAYPAL_OAUTH_ACCESS_TOKEN = "PAYPAL_OAUTH_ACCESS_TOKEN"
+        const val PURCHASE_SUCCESS = "PURCHASE_SUCCESS"
     }
 
     object SessionKeys {

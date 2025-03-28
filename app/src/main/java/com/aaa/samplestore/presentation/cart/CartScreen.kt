@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -21,6 +22,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -38,6 +40,7 @@ import coil3.compose.AsyncImage
 import com.aaa.samplestore.R
 import com.aaa.samplestore.domain.model.CartItem
 import com.aaa.samplestore.presentation.components.ErrorView
+import com.aaa.samplestore.presentation.components.HeaderView
 import com.aaa.samplestore.presentation.components.LoadingView
 
 @Composable
@@ -53,36 +56,48 @@ fun CartScreen(
     }
 
 
+    Scaffold (
+        topBar = {
+            HeaderView(
+                title = stringResource(R.string.shopping_cart),
+                shouldShowTitle = true
+            )
+        },
+        contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp)
+    ) { innerPadding ->
+        Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(12.dp)
+            ) {
+                if(cartItems.isLoading) {
+                    LoadingView()
+                }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Text(stringResource(R.string.shopping_cart), style = MaterialTheme.typography.headlineMedium)
+                if(cartItems.error != null) {
+                    ErrorView(cartItems.error)
+                }
 
-        if(cartItems.isLoading) {
-            LoadingView()
-        }
+                if (cartItems.data.isNullOrEmpty()) {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Text("Your cart is empty", style = MaterialTheme.typography.bodyLarge)
+                    }
+                } else {
+                    LazyColumn(modifier = Modifier.weight(1f)) {
+                        items(cartItems.data) { item ->
+                            CartItemRow(item, viewModel)
+                        }
+                    }
 
-        if(cartItems.error != null) {
-            ErrorView(cartItems.error)
-        }
-
-        if (cartItems.data.isNullOrEmpty()) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("Your cart is empty", style = MaterialTheme.typography.bodyLarge)
-            }
-        } else {
-            LazyColumn(modifier = Modifier.weight(1f)) {
-                items(cartItems.data) { item ->
-                    CartItemRow(item, viewModel)
+                    OrderSummary(cartItems.data, onProceedToCheckoutClick)
                 }
             }
-
-            OrderSummary(cartItems.data, onProceedToCheckoutClick)
         }
+
     }
+
+
 }
 
 @Composable
@@ -105,7 +120,6 @@ fun CartItemRow(item: CartItem, viewModel: CartViewModel) {
         )
 
         Spacer(modifier = Modifier.width(12.dp))
-
         Column(modifier = Modifier.weight(1f)) {
             Text(item.title ?: "", fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
             Text("Brand: ${item.brand}", style = MaterialTheme.typography.bodySmall)

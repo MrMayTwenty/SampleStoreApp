@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -21,16 +22,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.aaa.samplestore.R
 
 @Composable
 fun HeaderView(
-    onSearch: (String) -> Unit,
-    onProfileClick: () -> Unit,
-    onCartClick: ()-> Unit,
-    shouldShowSearch: Boolean = false,
     title: String = "",
-    shouldShowTitle: Boolean = false
+    onSearch: (String) -> Unit = {},
+    onProfileClick: () -> Unit = {},
+    onCartClick: () -> Unit = {},
+    shouldShowTitle: Boolean = false,
+    shouldShowSearch: Boolean = false,
+    shouldShowProfile: Boolean = false,
+    shouldShowCart: Boolean = false
 ) {
     var searchQuery by remember { mutableStateOf("") }
 
@@ -42,7 +47,9 @@ fun HeaderView(
         verticalAlignment = Alignment.CenterVertically
     ) {
 
-        Box(modifier = Modifier.weight(1f).height(60.dp)) {
+        Box(modifier = Modifier
+            .weight(1f)
+            .height(60.dp)) {
             if (shouldShowSearch) {
                 TextField(
                     modifier = Modifier.fillMaxSize(),
@@ -51,23 +58,28 @@ fun HeaderView(
                         searchQuery = it
                         onSearch(it)
                     },
-                    placeholder = { Text("Search...") },
+                    placeholder = { Text(stringResource(R.string.search_textfield)) },
                 )
             }
             if(shouldShowTitle){
                 Text(
                     text = title,
-                    modifier = Modifier.align(Alignment.Center)
+                    modifier = Modifier.align(Alignment.CenterStart),
+                    style = MaterialTheme.typography.headlineLarge
                 )
             }
         }
 
-        IconButton(onClick = onCartClick) {
-            Icon(imageVector = Icons.Default.ShoppingCart, contentDescription = "Cart")
+        if(shouldShowCart) {
+            IconButton(onClick = onCartClick) {
+                Icon(imageVector = Icons.Default.ShoppingCart, contentDescription = "Cart")
+            }
         }
 
-        IconButton(onClick = onProfileClick) {
-            Icon(imageVector = Icons.Default.Person, contentDescription = "Account")
+        if(shouldShowProfile) {
+            IconButton(onClick = onProfileClick) {
+                Icon(imageVector = Icons.Default.Person, contentDescription = "Account")
+            }
         }
     }
 }

@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.aaa.samplestore.common.Constants
 import com.aaa.samplestore.common.Resource
 import com.aaa.samplestore.data.local.sharedpreference.SessionManager
+import com.aaa.samplestore.data.local.sharedpreference.SharedPreferenceManager
 import com.aaa.samplestore.domain.model.CartItem
 import com.aaa.samplestore.domain.model.Product
 import com.aaa.samplestore.domain.usecase.AddToCartUseCase
@@ -23,7 +24,8 @@ class ProductListViewModel @Inject constructor(
     private val getAllProductsUseCase: GetAllProductsUseCase,
     private val getProductByCategoryUseCase: GetProductByCategoryUseCase,
     private val addToCartUseCase: AddToCartUseCase,
-    private val sessionManager: SessionManager
+    private val sessionManager: SessionManager,
+    private val sharedPreferenceManager: SharedPreferenceManager
 
 ) : ViewModel() {
 
@@ -41,8 +43,22 @@ class ProductListViewModel @Inject constructor(
     private val _addToCartState = mutableStateOf(ViewModelState<Unit>())
     val addToCartState: State<ViewModelState<Unit>> = _addToCartState
 
+    private val _purchaseSuccessState = mutableStateOf(sharedPreferenceManager.getPurchaseSuccessState())
+    val purchaseSuccessState: State<Boolean> = _purchaseSuccessState
+
     fun getCurrentUserId():Long?{
         return sessionManager.getUserId()
+    }
+
+    fun getPurchaseSuccessState():Boolean{
+        val state = sharedPreferenceManager.getPurchaseSuccessState()
+        _purchaseSuccessState.value = state
+        return state
+    }
+
+    fun disablePurchaseSuccessState() {
+        sharedPreferenceManager.savePurchaseSuccessState(false)
+        _purchaseSuccessState.value = false
     }
 
     fun getAllProducts(page: Int) {

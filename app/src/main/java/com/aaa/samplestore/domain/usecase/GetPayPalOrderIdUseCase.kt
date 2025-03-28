@@ -4,6 +4,7 @@ import android.content.Context
 import com.aaa.samplestore.R
 import com.aaa.samplestore.common.Resource
 import com.aaa.samplestore.data.local.dao.CartDao
+import com.aaa.samplestore.data.local.sharedpreference.EncryptedSharedPreferenceManager
 import com.aaa.samplestore.data.local.sharedpreference.SessionManager
 import com.aaa.samplestore.data.remote.dto.request.Amount
 import com.aaa.samplestore.data.remote.dto.request.PayPalOrderRequest
@@ -22,7 +23,8 @@ class GetPayPalOrderIdUseCase @Inject constructor(
     @ApplicationContext private val context: Context,
     private val checkOutRepository: ICheckOutRepository,
     private val cartDao: CartDao,
-    private val sessionManager: SessionManager
+    private val sessionManager: SessionManager,
+    private val encryptedSharedPreferenceManager: EncryptedSharedPreferenceManager
 ) {
     operator fun invoke(): Flow<Resource<PayPalOrderStatus>> = flow {
         try {
@@ -44,6 +46,7 @@ class GetPayPalOrderIdUseCase @Inject constructor(
             )
             val payPalOrderStatus =
                 checkOutRepository.createOrderId("Bearer ${payPalAuthResponse.accessToken}", payPalOrderRequest).toPayPalOrderStatus()
+            encryptedSharedPreferenceManager.saveOauthAccessToken(payPalAuthResponse.accessToken)
             emit(Resource.Success(payPalOrderStatus))
         } catch (e: HttpException) {
             emit(Resource.Error(e.localizedMessage ?: context.getString(R.string.error_general_fallback_text)))

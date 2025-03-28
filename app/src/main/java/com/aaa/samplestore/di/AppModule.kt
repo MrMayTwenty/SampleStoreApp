@@ -6,6 +6,7 @@ import com.aaa.samplestore.data.local.dao.CartDao
 import com.aaa.samplestore.data.local.dao.UserDao
 import com.aaa.samplestore.data.local.dao.WishlistDao
 import com.aaa.samplestore.data.local.database.AppDatabase
+import com.aaa.samplestore.data.local.sharedpreference.EncryptedSharedPreferenceManager
 import com.aaa.samplestore.data.local.sharedpreference.SessionManager
 import com.aaa.samplestore.data.remote.FakeStoreApi
 import com.aaa.samplestore.data.remote.PayPalApi
@@ -107,4 +108,8 @@ object AppModule {
     @Provides
     @Singleton
     fun provideSessionManager(@ApplicationContext context: Context): SessionManager = SessionManager(context)
+
+    @Provides
+    @Singleton
+    fun provideEncryptedSharedPreferenceManager(@ApplicationContext context: Context): EncryptedSharedPreferenceManager = EncryptedSharedPreferenceManager(context)
 }

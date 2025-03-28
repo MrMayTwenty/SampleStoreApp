@@ -86,19 +86,11 @@ fun ProductDetailScreen(
         val product = productState.data
 
         Scaffold(
-            topBar = {
-                HeaderView(
-                    onSearch = {},
-                    onProfileClick = onProfileClick,
-                    onCartClick = onCartClick
-                )
-            },
             bottomBar = {
-                Column (modifier = Modifier.fillMaxWidth()) {
+                Column (modifier = Modifier.fillMaxWidth().padding(12.dp,0.dp)) {
                     Row(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
+                            .fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
@@ -187,87 +179,90 @@ fun ProductDetailScreen(
                 }
             }
         ) { innerPadding ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .verticalScroll(rememberScrollState())
-            ) {
-                AsyncImage(
-                    model = product.image,
-                    contentDescription = product.title,
+            Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(250.dp)
-                        .clip(RoundedCornerShape(16.dp)),
-                    contentScale = ContentScale.Crop
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text(
-                    text = product.title,
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = "$${product.price}",
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
+                        .fillMaxSize()
+                        .padding(12.dp)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    AsyncImage(
+                        model = product.image,
+                        contentDescription = product.title,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(250.dp)
+                            .clip(RoundedCornerShape(16.dp)),
+                        contentScale = ContentScale.Crop
                     )
-                    product.discount?.let {
-                        if(it > 0) {
-                            Spacer(modifier = Modifier.width(8.dp))
-                            SaleBadge(product.discount)
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text(
+                        text = product.title,
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = "$${product.price}",
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        product.discount?.let {
+                            if(it > 0) {
+                                Spacer(modifier = Modifier.width(8.dp))
+                                SaleBadge(product.discount)
+                            }
                         }
                     }
-                }
 
-                Spacer(modifier = Modifier.height(8.dp))
-
+                    Spacer(modifier = Modifier.height(8.dp))
 
 
-                Text(
-                    text = product.description,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f),
-                    maxLines = maxLines,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.clickable { isDescriptionExpanded = !isDescriptionExpanded }
-                )
 
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text(
-                    text = stringResource(R.string.brandWithValue, product.brand),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
-                )
-
-                Spacer(modifier = Modifier.height(4.dp))
-
-                Text(
-                    text = stringResource(R.string.categoryWithValue, product.category),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
-                )
-
-                Spacer(modifier = Modifier.height(4.dp))
-
-                product.color?.let {
                     Text(
-                        text = stringResource(R.string.color_with_value, it),
+                        text = product.description,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f),
+                        maxLines = maxLines,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.clickable { isDescriptionExpanded = !isDescriptionExpanded }
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text(
+                        text = stringResource(R.string.brandWithValue, product.brand),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
                     )
-                }
 
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    Text(
+                        text = stringResource(R.string.categoryWithValue, product.category),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
+                    )
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    product.color?.let {
+                        Text(
+                            text = stringResource(R.string.color_with_value, it),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
+                        )
+                    }
+
+                }
             }
+
         }
 
 

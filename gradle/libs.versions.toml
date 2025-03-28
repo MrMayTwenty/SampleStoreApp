@@ -31,6 +31,7 @@ room = "2.6.1"
 ksp = "2.0.21-1.0.27"
 jbcrypt = "0.4"
 paypal-sdk = "2.0.0"
+googleFonts = "1.7.8"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -71,7 +72,7 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 jbcrypt = { group = "org.mindrot", name = "jbcrypt", version.ref = "jbcrypt"}
 paypal-android-card-payment = { group = "com.paypal.android", name = "card-payments", version.ref = "paypal-sdk" }
 paypal-android-web-payment = { group = "com.paypal.android", name = "web-payments", version.ref = "paypal-sdk" }
-
+google-fonts-compose = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "googleFonts" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -82,5 +83,3 @@ hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "dagger-hi
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 android-room = { id = "androidx.room", version.ref = "room" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-
-

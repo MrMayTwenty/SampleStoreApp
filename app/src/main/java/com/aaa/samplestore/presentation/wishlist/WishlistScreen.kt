@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
@@ -54,35 +55,38 @@ fun WishlistScreen(
                 onSearch = {},
                 onProfileClick = {},
                 onCartClick = {},
-                title = "Wishlist",
+                title = stringResource(R.string.wishlist),
                 shouldShowTitle = true
             )
         }
-    ) { padding ->
-        if (wishlistItems.data.isNullOrEmpty()) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("Your wishlist is empty.", style = MaterialTheme.typography.bodyLarge)
-            }
-        } else {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-            ) {
-                items(wishlistItems.data) { wishlistItem ->
-                    WishlistItem(
-                        wishlistItem = wishlistItem,
-                        onRemove = { viewModel.removeProductFromWishlist(wishlistItem.wishlistItemId!!) },
-                        onClick = { onProductClick(wishlistItem.wishlistItemId!!) }
-                    )
+    ) { innerPadding ->
+        Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
+            if (wishlistItems.data.isNullOrEmpty()) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(12.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("Your wishlist is empty.", style = MaterialTheme.typography.bodyLarge)
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(12.dp)
+                ) {
+                    items(wishlistItems.data) { wishlistItem ->
+                        WishlistItem(
+                            wishlistItem = wishlistItem,
+                            onRemove = { viewModel.removeProductFromWishlist(wishlistItem.wishlistItemId!!) },
+                            onClick = { onProductClick(wishlistItem.wishlistItemId!!) }
+                        )
+                    }
                 }
             }
         }
+
     }
 }
 
@@ -114,7 +118,7 @@ fun WishlistItem(
             Spacer(modifier = Modifier.width(8.dp))
 
             Column(modifier = Modifier.weight(1f)) {
-                Text(wishlistItem.title, style = MaterialTheme.typography.bodyLarge)
+                Text(wishlistItem.title, style = MaterialTheme.typography.bodyLarge, maxLines = 3, overflow = TextOverflow.Ellipsis)
                 Text("$${wishlistItem.price}", style = MaterialTheme.typography.bodyMedium, color = Color.Gray)
             }
 
