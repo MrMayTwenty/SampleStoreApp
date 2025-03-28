@@ -10,28 +10,31 @@ SampleStoreApp is a modern shopping application built using **Jetpack Compose** 
 - **Checkout Process**: Complete purchases using Google Pay or PayPal.
 - **User Authentication**: Secure login and registration.
 - **Multi-language Support**: Translations available in English, German, Spanish, Italian, and Portuguese.
-- **Offline Support**: View products and cart items even when offline using Room Database.
+- **Dark and Light Mode Support**: Seamless theme switching for better user experience.
+- **PayPal Sandbox Integration**: Test payment processing in a secure environment.
 
 ## Installation Guide
 
 ### Prerequisites
-Ensure you have the following installed before running the project:
-- **Android Studio (Latest Stable Version)**
-- **Java 17+ (For Gradle Compatibility)**
-- **Gradle (Latest Version)**
-- **Android Emulator or Physical Device (API Level 26+)**
 
 ### Steps to Install and Run
 1. **Clone the repository**:
-   ```sh
-   git clone https://github.com/your-repository/SampleStoreApp.git
-   cd SampleStoreApp
-   ```
-
+```sh  
+   https://github.com/MrMayTwenty/SampleStoreApp.git
+```  
 ## Open the project in Android Studio:
 
 1. Select **Open an existing project**.
 2. Navigate to the cloned folder and open it.
+
+## Create Secret Properties
+1. Change Project View from **Android** to **Project**
+2. Create `project.properties` file
+3. Add the following code
+```
+paypal_client_id:{request to agafrancisDroid@gmail.com}
+paypal_client_secret:{request to agafrancisDroid@gmail.com}
+```
 
 ## Sync Gradle:
 
@@ -46,17 +49,26 @@ Ensure you have the following installed before running the project:
 ## Configurations
 
 - **Database Initialization**: The Room database initializes automatically when the app runs.
-- **API Configurations**: If API integration is needed, update `BASE_URL` in `Constants.kt`.
-- **Payment Integration**: Configure Google Pay and PayPal credentials in `payments_config.xml`.
+- **API Configurations**: If API integration is needed, update `BASE_URL` in `build.gradle.kts`
 
 ## Technologies Used
 
 - **Kotlin** with **Jetpack Compose** for modern UI development.
-- **Room Database** for local storage.
-- **Hilt** for dependency injection.
-- **ViewModel & LiveData** for state management.
-- **Retrofit** (If APIs are used for product fetching).
+- **Room Database** for local storage and efficient data handling.
+- **Dagger Hilt** for dependency injection.
+- **ViewModel & State** for state management.
+- **UseCase Pattern** to structure business logic.
+- **Retrofit** for networking (if APIs are used for product fetching).
 - **Coroutines & Flow** for asynchronous processing.
+### Notable Libraries
+
+- **Navigation**: Jetpack Navigation for seamless screen transitions.
+- **Coil**: Image loading with support for Jetpack Compose.
+- **OkHttp Logging Interceptor**: Debugging network requests.
+- **Kotlinx Serialization**: JSON parsing with Kotlin Serialization.
+- **Security Crypto**: Secure data storage.
+- **PayPal SDK**: Payment processing.
+- **Google Fonts**: Custom typography integration.
 
 ## Screenshots
 
